@@ -1,0 +1,10 @@
+FROM mysql:8
+
+COPY my.cnf /etc/mysql/my.cnf
+
+ENV MYSQL_ROOT_PASSWORD=root
+ENV MYSQL_DATABASE=clinic_db
+ENV MYSQL_USER=user
+ENV MYSQL_PASSWORD=password
+
+EXPOSE 3306

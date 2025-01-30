@@ -1,0 +1,2 @@
+CREATE DATABASE IF NOT EXISTS identifyservice;
+CREATE DATABASE IF NOT EXISTS reservationservice;
