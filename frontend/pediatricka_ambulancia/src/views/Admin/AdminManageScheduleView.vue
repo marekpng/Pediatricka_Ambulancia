@@ -2,7 +2,6 @@
     <div class="container py-5">
       <h1>Manage Schedules</h1>
   
-      <!-- Step 1: Select Year -->
       <section v-if="Object.keys(groupedSchedules).length" class="mb-5">
         <h2>Select Year</h2>
         <div class="row">
@@ -21,7 +20,6 @@
         </div>
       </section>
   
-      <!-- Step 2: Select Month -->
       <section v-if="selectedYear" class="mb-5">
         <h2>Select Month for {{ selectedYear }}</h2>
         <div class="row">
@@ -40,7 +38,6 @@
         </div>
       </section>
   
-      <!-- Step 3: Select Date -->
       <section v-if="selectedMonth" class="mb-5">
         <h2>Select Date for {{ selectedMonth }}, {{ selectedYear }}</h2>
         <div class="row">
@@ -59,7 +56,6 @@
         </div>
       </section>
   
-      <!-- Step 4: View and Manage Timeslots -->
       <section v-if="selectedDate" class="mb-5">
         <h2>Working Hours for {{ selectedDate }}</h2>
         <ul class="list-group">
@@ -103,7 +99,6 @@
         </ul>
       </section>
   
-      <!-- Edit Timeslot Modal -->
       <div v-if="editingTimeslot" class="modal d-block">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -158,12 +153,12 @@ export default {
   name: "ManageSchedules",
   data() {
     return {
-      schedules: [], // Holds all schedules from API
-      groupedSchedules: {}, // Grouped by year -> month -> date -> times
+      schedules: [], 
+      groupedSchedules: {}, 
       selectedYear: null,
       selectedMonth: null,
       selectedDate: null,
-      editingTimeslot: null, // Timeslot being edited
+      editingTimeslot: null, 
     };
   },
   methods: {
@@ -207,7 +202,7 @@ export default {
       this.selectedDate = date;
     },
     editTimeslot(timeslot) {
-      this.editingTimeslot = { ...timeslot }; // Clone timeslot to edit
+      this.editingTimeslot = { ...timeslot };
     },
     saveTimeslot() {
     const formattedStartTime = `${this.editingTimeslot.start_time}:00`;
@@ -227,8 +222,8 @@ export default {
         )
         .then((response) => {
         console.log(response.data.message);
-        this.editingTimeslot = null; // Close the edit modal
-        this.fetchSchedules(); // Refresh the schedules
+        this.editingTimeslot = null; 
+        this.fetchSchedules(); 
         })
         .catch((error) => {
         console.error("Error updating timeslot:", error.response?.data || error);
@@ -240,14 +235,14 @@ export default {
           headers: { Authorization: `Bearer ${localStorage.getItem("userToken")}` },
         })
         .then(() => {
-          this.fetchSchedules(); // Refresh schedules
+          this.fetchSchedules(); 
         })
         .catch((error) => {
           console.error("Error deleting timeslot:", error.response?.data || error);
         });
     },
     cancelEdit() {
-      this.editingTimeslot = null; // Close edit modal
+      this.editingTimeslot = null; 
     },
   },
   mounted() {

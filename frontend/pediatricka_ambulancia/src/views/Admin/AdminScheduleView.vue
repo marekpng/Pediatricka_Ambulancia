@@ -3,7 +3,6 @@
       <h1>Manage Schedule</h1>
 
 
-         <!-- Manage Schedule Button -->
     <section class="mb-5">
       <h2>Manage Schedules</h2>
       <button class="btn btn-primary" @click="goToManageSchedule">
@@ -11,7 +10,6 @@
       </button>
     </section>
   
-      <!-- View Current Schedule -->
       <section class="mb-5">
         <h2>Current Schedule</h2>
         <div v-if="schedule.working_hours && schedule.days_off">
@@ -42,7 +40,6 @@
         </div>
       </section>
   
-      <!-- Set Working Hours -->
       <section class="mb-5">
         <h2>Set Working Hours</h2>
         <form @submit.prevent="setWorkingHours">
@@ -97,7 +94,6 @@
         </form>
       </section>
   
-      <!-- Add Days Off -->
       <section class="mb-5">
         <h2>Add Day Off</h2>
         <form @submit.prevent="addDayOff">
@@ -127,7 +123,6 @@
         </form>
       </section>
   
-      <!-- Generate Timeslots -->
       <section>
         <h2>Generate Timeslots</h2>
         <form @submit.prevent="generateTimeslots">
@@ -260,6 +255,5 @@
   </script>
   
   <style scoped>
-  /* Add custom styles for better UI */
   </style>
   

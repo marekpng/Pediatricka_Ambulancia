@@ -44,11 +44,11 @@ export default {
     async registerAdmin() {
       try {
         const response = await axios.post("http://127.0.0.1:8000/api/register", this.formData);
-        // Handle successful registration
+        
         console.log("Admin registered successfully:", response.data);
         await router.push({name: 'home'});
       } catch (error) {
-        // Handle registration error
+        
         this.errorMessage = error.response.data.message;
 
       }
