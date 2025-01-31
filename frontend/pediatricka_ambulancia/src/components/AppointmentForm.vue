@@ -11,7 +11,7 @@
           <div class="bg-light rounded h-100 d-flex align-items-center p-5">
             <form @submit.prevent="submitForm">
               <div class="row g-3">
-                <!-- Name -->
+        
                 <div class="col-12">
                   <input 
                     type="text" 
@@ -22,7 +22,6 @@
                     required>
                 </div>
 
-                <!-- Contact Number -->
                 <div class="col-12">
                   <input 
                     type="text" 
@@ -33,7 +32,6 @@
                     required>
                 </div>
 
-                <!-- Select Date -->
                 <div class="col-12">
                   <select 
                     class="form-control border-0" 
@@ -48,7 +46,6 @@
                   </select>
                 </div>
 
-                <!-- Select Time -->
                 <div class="col-12">
                   <select 
                     class="form-control border-0" 
@@ -66,7 +63,6 @@
                   </select>
                 </div>
 
-                <!-- Describe Problem -->
                 <div class="col-12">
                   <textarea 
                     class="form-control border-0" 
@@ -77,7 +73,6 @@
                   </textarea>
                 </div>
 
-                <!-- Personal Number -->
                 <div class="col-12">
                   <input 
                     type="text" 
@@ -88,12 +83,11 @@
                     required>
                 </div>
 
-                <!-- Error Message -->
                 <div class="col-12" v-if="errorMessage">
                   <p class="text-danger">{{ errorMessage }}</p>
                 </div>
 
-                <!-- Submit Button -->
+                
                 <div class="col-12">
                   <button 
                     class="btn btn-primary w-100 py-3" 
@@ -120,31 +114,31 @@ export default {
     return {
       formData: {
         date: "",
-        time: null, // Stores the selected timeslot object
+        time: null, 
         description: "",
         name: "",
         personalNumber: "",
         contactNumber: "",
       },
-      availableDates: [], // Dates with available times
-      availableTimes: [], // Array of available timeslot objects
-      errorMessage: "", // Error message for invalid input
+      availableDates: [], 
+      availableTimes: [], 
+      errorMessage: "", 
     };
   },
   methods: {
-    // Fetch available timeslots from the API
+
     fetchAvailableTimes() {
       axios
-        .get("http://127.0.0.1:8081/api/schedule/timeslots/available")
+        .get("http://localhost/reservation-service/api/schedule/timeslots/available", {
+          withCredentials: true, 
+        })
         .then((response) => {
           const allTimeslots = response.data.available_timeslots;
 
-          // Filter unique available dates
           this.availableDates = [
             ...new Set(allTimeslots.map((timeslot) => timeslot.date)),
           ];
 
-          // Filter times for the selected date
           if (this.formData.date) {
             this.availableTimes = allTimeslots.filter(
               (timeslot) => timeslot.date === this.formData.date
@@ -156,7 +150,7 @@ export default {
         });
     },
 
-    // Submit form data
+    
     submitForm() {
       if (!this.formData.time) {
         this.errorMessage = "Please select a time slot.";
@@ -166,8 +160,8 @@ export default {
       const appointmentData = {
         name: this.formData.name,
         personal_number: this.formData.personalNumber,
-        timeslot_id: this.formData.time.id, // Use the id of the selected timeslot
-        contact_number: this.formData.contactNumber, // User-provided contact number
+        timeslot_id: this.formData.time.id, 
+        contact_number: this.formData.contactNumber, 
         description: this.formData.description,
       };
 
@@ -179,8 +173,8 @@ export default {
         })
         .then((response) => {
           console.log("Appointment created successfully:", response.data);
-          this.errorMessage = ""; // Clear error message
-          this.$router.push("/success-page"); // Navigate to success page
+          this.errorMessage = ""; 
+          this.$router.push("/success-page"); 
         })
         .catch((error) => {
           if (error.response && error.response.status === 403) {
@@ -193,12 +187,10 @@ export default {
     },
   },
   mounted() {
-    // Fetch available dates and times on component load
     this.fetchAvailableTimes();
   },
 };
 </script>
 
 <style scoped>
-/* Add custom styles here */
 </style>
