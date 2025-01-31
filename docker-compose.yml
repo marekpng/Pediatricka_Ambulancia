@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # MySQL Database
   mysql:
     image: mysql:8
     container_name: mysql_container
@@ -16,19 +15,42 @@ services:
       - ./docker/mysql/init-scripts:/docker-entrypoint-initdb.d
     ports:
       - "3306:3306"
+    networks:
+      - backend
 
-  # PHP Service (Laravel)
-  php:
+  #  IdentifyService
+  identify_service:
     build: ./docker/php
-    container_name: php_container
+    container_name: identify_service_container
     restart: always
     volumes:
       - ./IdentifyService:/var/www/identify-service
-      - ./ReservationService:/var/www/reservation-service
+    working_dir: /var/www/identify-service
+    command: php artisan serve --host=0.0.0.0 --port=8080
     depends_on:
       - mysql
+    networks:
+      - backend
+    ports:
+      - "8080:8080"
 
-  # Nginx Service
+  #  ReservationService
+  reservation_service:
+    build: ./docker/php
+    container_name: reservation_service_container
+    restart: always
+    volumes:
+      - ./ReservationService:/var/www/reservation-service
+    working_dir: /var/www/reservation-service
+    command: php artisan serve --host=0.0.0.0 --port=8081
+    depends_on:
+      - mysql
+    networks:
+      - backend
+    ports:
+      - "8081:8081"
+
+  # Nginx Service (Reverse Proxy)
   nginx:
     image: nginx:latest
     container_name: nginx_container
@@ -37,24 +59,29 @@ services:
       - "80:80"
     volumes:
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - ./IdentifyService:/var/www/identify-service
-      - ./ReservationService:/var/www/reservation-service
     depends_on:
-      - php
-
+      - identify_service
+      - reservation_service
+    networks:
+      - backend
 
   frontend:
     build:
       context: ./frontend/pediatricka_ambulancia
+    container_name: frontend_container
     volumes:
       - ./frontend/pediatricka_ambulancia:/app
-      - /app/node_modules 
+      - /app/node_modules
     restart: always
     ports:
       - "5173:5173"
     depends_on:
       - nginx
-
+    networks:
+      - backend
 
 volumes:
   mysql_data:
+
+networks:
+  backend:
