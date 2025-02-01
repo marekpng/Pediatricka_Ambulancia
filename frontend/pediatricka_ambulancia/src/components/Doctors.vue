@@ -132,7 +132,7 @@ export default {
   },
   methods: {
     fetchDoctors() {
-      axios.get('http://localhost:8000/api/doctors')
+      axios.get('http://localhost/identify-service/api/doctors')
           .then(response => {
             this.doctors = response.data;
           })

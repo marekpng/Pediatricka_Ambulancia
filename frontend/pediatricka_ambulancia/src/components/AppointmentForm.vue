@@ -166,7 +166,7 @@ export default {
       };
 
       axios
-        .post("http://127.0.0.1:8081/api/appointments", appointmentData, {
+        .post("http://localhost/reservation-service/api/appointments", appointmentData, {
           headers: {
             "Content-Type": "application/json",
           },

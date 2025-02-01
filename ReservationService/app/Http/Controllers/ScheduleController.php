@@ -11,13 +11,13 @@ use Carbon\CarbonPeriod;
 
 class ScheduleController extends Controller
 {
-    
+
     private function authenticate(Request $request)
     {
         $token = $request->bearerToken();
         $response = \Http::withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->get('http://127.0.0.1:8080/api/user'); 
+        ])->get('http://identify_service:8080/api/user');
 
         if ($response->successful()) {
             return $response->json();
@@ -28,7 +28,7 @@ class ScheduleController extends Controller
 
     /**
      * Ziskanie pracovneho casu (working schedule)
-     * 
+     *
      */
     public function index()
     {
@@ -54,7 +54,7 @@ class ScheduleController extends Controller
         $validated = $request->validate([
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
-            'slot_duration' => 'required|integer|min:5|max:120', 
+            'slot_duration' => 'required|integer|min:5|max:120',
             'days' => 'required|array',
             'days.*' => 'in:Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday',
         ]);
@@ -115,7 +115,7 @@ class ScheduleController extends Controller
         $period = CarbonPeriod::create($validated['start_date'], $validated['end_date']);
 
         foreach ($period as $date) {
-            $dayName = $date->format('l'); 
+            $dayName = $date->format('l');
 
             if (in_array($dayName, $workingHours->days) && !in_array($date->toDateString(), $daysOff)) {
                 $currentSlot = $startTime->copy();
@@ -236,7 +236,7 @@ class ScheduleController extends Controller
         ]);
     }
 
-    
+
     public function getAvailableTimeslots()
     {
         $availableTimeslots = Timeslot::where('is_booked', false)->get();
@@ -247,7 +247,7 @@ class ScheduleController extends Controller
         ]);
     }
 
-    
+
     public function getAllSchedules(Request $request)
     {
 

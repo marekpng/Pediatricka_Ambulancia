@@ -184,7 +184,7 @@
     methods: {
       fetchSchedule() {
         axios
-          .get("http://127.0.0.1:8081/api/schedule")
+          .get("http://localhost/reservation-service/api/schedule")
           .then((response) => {
             this.schedule = response.data;
           })
@@ -194,7 +194,7 @@
       },
       setWorkingHours() {
         axios
-          .post("http://127.0.0.1:8081/api/schedule/working-hours", this.workingHours, {
+          .post("http://localhost/reservation-service/api/schedule/working-hours", this.workingHours, {
             headers: { Authorization: `Bearer ${localStorage.getItem("userToken")}` },
           })
           .then((response) => {
@@ -207,7 +207,7 @@
       },
       addDayOff() {
         axios
-          .post("http://127.0.0.1:8081/api/schedule/days-off", this.newDayOff, {
+          .post("http://localhost/reservation-service/api/schedule/days-off", this.newDayOff, {
             headers: { Authorization: `Bearer ${localStorage.getItem("userToken")}` },
           })
           .then((response) => {
@@ -220,7 +220,7 @@
       },
       deleteDayOff(id) {
         axios
-          .delete(`http://127.0.0.1:8081/api/schedule/days-off/${id}`, {
+          .delete(`http://localhost/reservation-service/api/schedule/days-off/${id}`, {
             headers: { Authorization: `Bearer ${localStorage.getItem("userToken")}` },
           })
           .then((response) => {
@@ -233,7 +233,7 @@
       },
       generateTimeslots() {
         axios
-          .post("http://127.0.0.1:8081/api/schedule/generate-timeslots", this.timeslotRange, {
+          .post("http://localhost/reservation-service/api/schedule/generate-timeslots", this.timeslotRange, {
             headers: { Authorization: `Bearer ${localStorage.getItem("userToken")}` },
           })
           .then((response) => {

@@ -18,7 +18,7 @@ class AppointmentController extends Controller
         $token = $request->bearerToken();
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $token,
-        ])->get('http://127.0.0.1:8080/api/user');  //  URL Identity Service musi sedet s portom aj adresa
+        ])->get('http://identify_service:8080/api/user');  //  URL Identity Service musi sedet s portom aj adresa
 
         if ($response->successful()) {
             return $response->json();
@@ -43,7 +43,7 @@ class AppointmentController extends Controller
         return response()->json($appointments);
     }
 
-    
+
     public function store(Request $request)
     {
 
@@ -145,7 +145,7 @@ class AppointmentController extends Controller
         return response()->json($appointment);
     }
 
-   
+
     public function destroy(Request $request, $id)
     {
         $user = $this->authenticate($request);

@@ -164,7 +164,7 @@ export default {
   methods: {
     fetchSchedules() {
       axios
-        .get("http://127.0.0.1:8081/api/schedule/all", {
+        .get("http://localhost/reservation-service/api/schedule/all", {
           headers: { Authorization: `Bearer ${localStorage.getItem("userToken")}` },
         })
         .then((response) => {
@@ -210,7 +210,7 @@ export default {
 
     axios
         .put(
-        `http://127.0.0.1:8081/api/schedule/timeslots/${this.editingTimeslot.id}`,
+        `http://localhost/reservation-service/api/schedule/timeslots/${this.editingTimeslot.id}`,
         {
             date: this.editingTimeslot.date,
             start_time: formattedStartTime,
@@ -231,7 +231,7 @@ export default {
     },
     deleteTimeslot(id) {
       axios
-        .delete(`http://127.0.0.1:8081/api/schedule/timeslots/${id}`, {
+        .delete(`http://localhost/reservation-service/api/schedule/timeslots/${id}`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("userToken")}` },
         })
         .then(() => {
