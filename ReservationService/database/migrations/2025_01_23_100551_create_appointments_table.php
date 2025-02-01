@@ -11,16 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
+
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('patient_id')
-            ->constrained('patients')
+                ->constrained('patients')
                 ->onDelete('cascade');
             $table->foreignId('timeslot_id')
-            ->constrained('timeslots')
+                ->constrained('timeslots')
                 ->onDelete('cascade');
             $table->string('contact_number');
+            $table->string('email');
             $table->text('description')->nullable();
+            $table->string('status')->default('pending');
+            $table->string('verification_token')->nullable();
             $table->timestamps();
         });
     }

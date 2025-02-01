@@ -11,7 +11,6 @@
           <div class="bg-light rounded h-100 d-flex align-items-center p-5">
             <form @submit.prevent="submitForm">
               <div class="row g-3">
-        
                 <div class="col-12">
                   <input 
                     type="text" 
@@ -29,6 +28,17 @@
                     placeholder="Kontaktné číslo (napr., +421 915 333 444)" 
                     style="height: 55px;" 
                     v-model="formData.contactNumber" 
+                    required>
+                </div>
+
+                <!-- New Email Field -->
+                <div class="col-12">
+                  <input 
+                    type="email" 
+                    class="form-control border-0" 
+                    placeholder="Zadajte Váš email" 
+                    style="height: 55px;" 
+                    v-model="formData.email" 
                     required>
                 </div>
 
@@ -87,7 +97,6 @@
                   <p class="text-danger">{{ errorMessage }}</p>
                 </div>
 
-                
                 <div class="col-12">
                   <button 
                     class="btn btn-primary w-100 py-3" 
@@ -113,12 +122,13 @@ export default {
   data() {
     return {
       formData: {
+        name: "",
+        contactNumber: "",
+        email: "", 
         date: "",
         time: null, 
         description: "",
-        name: "",
         personalNumber: "",
-        contactNumber: "",
       },
       availableDates: [], 
       availableTimes: [], 
@@ -126,7 +136,6 @@ export default {
     };
   },
   methods: {
-
     fetchAvailableTimes() {
       axios
         .get("http://localhost/reservation-service/api/schedule/timeslots/available", {
@@ -134,11 +143,9 @@ export default {
         })
         .then((response) => {
           const allTimeslots = response.data.available_timeslots;
-
           this.availableDates = [
             ...new Set(allTimeslots.map((timeslot) => timeslot.date)),
           ];
-
           if (this.formData.date) {
             this.availableTimes = allTimeslots.filter(
               (timeslot) => timeslot.date === this.formData.date
@@ -150,18 +157,17 @@ export default {
         });
     },
 
-    
     submitForm() {
       if (!this.formData.time) {
         this.errorMessage = "Please select a time slot.";
         return;
       }
-
       const appointmentData = {
         name: this.formData.name,
         personal_number: this.formData.personalNumber,
         timeslot_id: this.formData.time.id, 
         contact_number: this.formData.contactNumber, 
+        email: this.formData.email,  
         description: this.formData.description,
       };
 

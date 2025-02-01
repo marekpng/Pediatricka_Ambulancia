@@ -9,6 +9,8 @@ import AdminView from '@/views/Admin/AdminView.vue';
 import AdminAppointmentsView from '@/views/Admin/AdminAppointmentsView.vue';
 import AdminScheduleView from '@/views/Admin/AdminScheduleView.vue';
 import AdminManageScheduleView from '@/views/Admin/AdminManageScheduleView.vue';
+import SuccessPageView from '@/views/SuccessPageView.vue';
+import VerificationSuccessView from '@/views/VerificationSuccessView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +34,16 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginView
+    },
+    {
+      path: '/success-page',
+      name: 'success-page',
+      component: SuccessPageView
+    },
+    {
+      path: '/verification-success',
+      name: 'verification-success',
+      component: VerificationSuccessView
     },
     {
       path: '/register',

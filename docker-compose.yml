@@ -50,6 +50,22 @@ services:
     ports:
       - "8081:8081"
 
+  email_service:
+    build: ./docker/php
+    container_name: email_service_container
+    restart: always
+    volumes:
+      - ./EmailService:/var/www/email-service
+    working_dir: /var/www/email-service
+    command: php artisan serve --host=0.0.0.0 --port=8000
+    depends_on:
+      - mysql
+    networks:
+      - backend
+    ports:
+      - "8000:8000"
+
+
   # Nginx Service (Reverse Proxy)
   nginx:
     image: nginx:latest
@@ -62,6 +78,17 @@ services:
     depends_on:
       - identify_service
       - reservation_service
+    networks:
+      - backend
+
+    # Mailpit Service for Email Testing
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: mailpit_container
+    restart: always
+    ports:
+      - "1025:1025"   # SMTP
+      - "8025:8025"   # Web interface
     networks:
       - backend
 

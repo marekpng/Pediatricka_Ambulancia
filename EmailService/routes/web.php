@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AppointmentController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,5 +16,3 @@ use App\Http\Controllers\AppointmentController;
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::get('/appointments/verify/{token}', [AppointmentController::class, 'verify'])->name('appointments.verify');
