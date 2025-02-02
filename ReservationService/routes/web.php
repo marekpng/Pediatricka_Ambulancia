@@ -17,4 +17,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/appointments/verify/{token}', [AppointmentController::class, 'verify'])->name('appointments.verify');
+Route::middleware(['throttle:5,10'])->get('/appointments/verify/{token}', [AppointmentController::class, 'verify'])->name('appointments.verify');

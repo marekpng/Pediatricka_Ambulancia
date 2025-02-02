@@ -40,7 +40,7 @@ Route::delete('/appointments/{id}', [AppointmentController::class, 'destroy']);
 
 
 //Tu nie je potreba prihlasenia ale overuje sa RodneCislo a Meno
-Route::post('/appointments', [AppointmentController::class, 'store']);
+Route::middleware(['throttle:5,10'])->post('/appointments', [AppointmentController::class, 'store']);
 
 
 
@@ -53,13 +53,13 @@ Route::post('/appointments', [AppointmentController::class, 'store']);
 
     Route::post('/schedule/working-hours', [ScheduleController::class, 'setWorkingHours']);
 
-   
+
     Route::post('/schedule/days-off', [ScheduleController::class, 'setDaysOff']);
 
-    
+
     Route::post('/schedule/generate-timeslots', [ScheduleController::class, 'generateTimeslots']);
 
-   
+
     Route::delete('/schedule/days-off/{id}', [ScheduleController::class, 'deleteDaysOff']);
 
     Route::get('/schedule/all', [ScheduleController::class, 'getAllSchedules']);
@@ -71,10 +71,10 @@ Route::post('/appointments', [AppointmentController::class, 'store']);
 //Ziskat booknute a nebooknute timesloty
 
     Route::get('/schedule', [ScheduleController::class, 'index']);
-    
+
     Route::get('/schedule/timeslots/booked', [ScheduleController::class, 'getBookedTimeslots']);
 
-    
+
     Route::get('/schedule/timeslots/available', [ScheduleController::class, 'getAvailableTimeslots']);
 
 

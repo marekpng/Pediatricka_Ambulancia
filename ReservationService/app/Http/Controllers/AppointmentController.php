@@ -45,7 +45,6 @@ class AppointmentController extends Controller
     }
 
 
-
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -72,65 +71,66 @@ class AppointmentController extends Controller
         }
 
         $token = Str::random(60);
+        $expiresAt = now()->addMinutes(10);
 
-        $appointment = Appointment::create([
-            'patient_id'         => $patient->id,
-            'timeslot_id'        => $validated['timeslot_id'],
-            'contact_number'     => $validated['contact_number'],
-            'email'              => $validated['email'],
-            'description'        => $validated['description'],
-            'status'             => 'pending',
-            'verification_token' => $token,
-        ]);
+        cache()->put("appointment_verification:{$token}", json_encode($validated), $expiresAt);
 
-        $response = Http::post('http://email_service:8000/api/send-verification-email', [
-            'email'            => $validated['email'],
-            'name'             => $validated['name'],
+        Http::post('http://email_service:8000/api/send-verification-email', [
+            'email' => $validated['email'],
+            'name'  => $validated['name'],
             'verification_url' => url("/appointments/verify/{$token}"),
         ]);
 
-        if (!$response->successful()) {
-            return response()->json([
-                'message' => 'Appointment created but failed to send verification email.'
-            ], 500);
-        }
-
         return response()->json([
-            'message' => 'Appointment pending verification. Please check your email to confirm your appointment.'
+            'message' => 'Please check your email to verify your appointment within 10 minutes.'
         ], 201);
     }
 
+
+
     public function verify($token)
     {
-        $appointment = Appointment::where('verification_token', $token)
-            ->where('status', 'pending')
-            ->first();
+        $appointmentData = cache()->get("appointment_verification:{$token}");
 
-        if (!$appointment) {
+        if (!$appointmentData) {
             return redirect('/')->with('error', 'Invalid or expired verification link.');
         }
 
-        $appointment->update([
-            'status'             => 'confirmed',
-            'verification_token' => null,
+        $appointmentData = json_decode($appointmentData, true);
+
+        $patient = Patient::where('name', $appointmentData['name'])->first();
+        if (!$patient || !\Illuminate\Support\Facades\Hash::check($appointmentData['personal_number'], $patient->personal_number)) {
+            return redirect('/')->with('error', 'Invalid patient data.');
+        }
+
+        $timeslot = Timeslot::find($appointmentData['timeslot_id']);
+        if (!$timeslot || $timeslot->is_booked) {
+            return redirect('/')->with('error', 'This timeslot is no longer available.');
+        }
+
+        $appointment = Appointment::create([
+            'patient_id'     => $patient->id,
+            'timeslot_id'    => $appointmentData['timeslot_id'],
+            'contact_number' => $appointmentData['contact_number'],
+            'email'          => $appointmentData['email'],
+            'description'    => $appointmentData['description'],
+            'status'         => 'confirmed',
         ]);
 
-        $appointment->timeslot->update(['is_booked' => true]);
+        $timeslot->update(['is_booked' => true]);
 
-        $response = Http::post('http://email_service:8000/api/send-confirmation-email', [
-            'email'          => $appointment->email,
-            'name'           => $appointment->patient->name,
-            'date'           => $appointment->timeslot->date,
-            'time'           => "{$appointment->timeslot->start_time} - {$appointment->timeslot->end_time}",
+        cache()->forget("appointment_verification:{$token}");
+
+        Http::post('http://email_service:8000/api/send-confirmation-email', [
+            'email'         => $appointment->email,
+            'name'          => $appointment->patient->name,
+            'date'          => $appointment->timeslot->date,
+            'time'          => "{$appointment->timeslot->start_time} - {$appointment->timeslot->end_time}",
             'contact_number' => $appointment->contact_number,
             'description'    => $appointment->description,
         ]);
 
-        if (!$response->successful()) {
-            \Log::error('Confirmation email failed for appointment ID: ' . $appointment->id);
-        }
-
-        return redirect('http://localhost:5173/verification-success')->with('success', 'Your appointment has been confirmed! Check your email for details.');
+        return redirect('http://localhost:5173/verification-success');
     }
 
 
