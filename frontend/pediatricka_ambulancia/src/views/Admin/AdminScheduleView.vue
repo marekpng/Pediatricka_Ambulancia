@@ -153,107 +153,118 @@
       </section>
     </div>
   </template>
-  
-  <script>
-  import axios from "axios";
-  
-  export default {
-    data() {
-      return {
-        schedule: {
-          working_hours: null,
-          days_off: [],
-        },
-        workingHours: {
-          start_time: "",
-          end_time: "",
-          slot_duration: 30,
-          days: [],
-        },
-        newDayOff: {
-          date: "",
-          reason: "",
-        },
-        timeslotRange: {
-          start_date: "",
-          end_date: "",
-        },
-        weekDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-      };
+
+<script>
+import axios from "axios";
+import { inject } from "vue";
+
+export default {
+  data() {
+    return {
+      schedule: {
+        working_hours: null,
+        days_off: [],
+      },
+      workingHours: {
+        start_time: "",
+        end_time: "",
+        slot_duration: 30,
+        days: [],
+      },
+      newDayOff: {
+        date: "",
+        reason: "",
+      },
+      timeslotRange: {
+        start_date: "",
+        end_date: "",
+      },
+      weekDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+      setLoading: null,
+    };
+  },
+  created() {
+    this.setLoading = inject("setLoading"); 
+  },
+  methods: {
+    async fetchSchedule() {
+      if (this.setLoading) this.setLoading(true);
+      try {
+        const response = await axios.get("http://localhost/reservation-service/api/schedule");
+        this.schedule = response.data;
+      } catch (error) {
+        console.error("Error fetching schedule:", error.response?.data || error);
+      } finally {
+        if (this.setLoading) this.setLoading(false);
+      }
     },
-    methods: {
-      fetchSchedule() {
-        axios
-          .get("http://localhost/reservation-service/api/schedule")
-          .then((response) => {
-            this.schedule = response.data;
-          })
-          .catch((error) => {
-            console.error("Error fetching schedule:", error.response?.data || error);
-          });
-      },
-      setWorkingHours() {
-        axios
-          .post("http://localhost/reservation-service/api/schedule/working-hours", this.workingHours, {
-            headers: { Authorization: `Bearer ${localStorage.getItem("userToken")}` },
-          })
-          .then((response) => {
-            console.log("Working hours set:", response.data);
-            this.fetchSchedule();
-          })
-          .catch((error) => {
-            console.error("Error setting working hours:", error.response?.data || error);
-          });
-      },
-      addDayOff() {
-        axios
-          .post("http://localhost/reservation-service/api/schedule/days-off", this.newDayOff, {
-            headers: { Authorization: `Bearer ${localStorage.getItem("userToken")}` },
-          })
-          .then((response) => {
-            console.log("Day off added:", response.data);
-            this.fetchSchedule();
-          })
-          .catch((error) => {
-            console.error("Error adding day off:", error.response?.data || error);
-          });
-      },
-      deleteDayOff(id) {
-        axios
-          .delete(`http://localhost/reservation-service/api/schedule/days-off/${id}`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem("userToken")}` },
-          })
-          .then((response) => {
-            console.log("Day off deleted:", response.data);
-            this.fetchSchedule();
-          })
-          .catch((error) => {
-            console.error("Error deleting day off:", error.response?.data || error);
-          });
-      },
-      generateTimeslots() {
-        axios
-          .post("http://localhost/reservation-service/api/schedule/generate-timeslots", this.timeslotRange, {
-            headers: { Authorization: `Bearer ${localStorage.getItem("userToken")}` },
-          })
-          .then((response) => {
-            console.log("Timeslots generated:", response.data);
-            this.fetchSchedule();
-          })
-          .catch((error) => {
-            console.error("Error generating timeslots:", error.response?.data || error);
-          });
-      },
-      goToManageSchedule() {
-      this.$router.push('/admin/schedule/manage');
+
+    async setWorkingHours() {
+      if (this.setLoading) this.setLoading(true);
+      try {
+        await axios.post("http://localhost/reservation-service/api/schedule/working-hours", this.workingHours, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("userToken")}` },
+        });
+        await this.fetchSchedule();
+      } catch (error) {
+        console.error("Error setting working hours:", error.response?.data || error);
+      } finally {
+        if (this.setLoading) this.setLoading(false);
+      }
     },
+
+    async addDayOff() {
+      if (this.setLoading) this.setLoading(true);
+      try {
+        await axios.post("http://localhost/reservation-service/api/schedule/days-off", this.newDayOff, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("userToken")}` },
+        });
+        await this.fetchSchedule();
+      } catch (error) {
+        console.error("Error adding day off:", error.response?.data || error);
+      } finally {
+        if (this.setLoading) this.setLoading(false);
+      }
     },
-    mounted() {
-      this.fetchSchedule();
+
+    async deleteDayOff(id) {
+      if (this.setLoading) this.setLoading(true);
+      try {
+        await axios.delete(`http://localhost/reservation-service/api/schedule/days-off/${id}`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("userToken")}` },
+        });
+        await this.fetchSchedule();
+      } catch (error) {
+        console.error("Error deleting day off:", error.response?.data || error);
+      } finally {
+        if (this.setLoading) this.setLoading(false);
+      }
     },
-  };
-  </script>
-  
+
+    async generateTimeslots() {
+      if (this.setLoading) this.setLoading(true);
+      try {
+        await axios.post("http://localhost/reservation-service/api/schedule/generate-timeslots", this.timeslotRange, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("userToken")}` },
+        });
+        await this.fetchSchedule();
+      } catch (error) {
+        console.error("Error generating timeslots:", error.response?.data || error);
+      } finally {
+        if (this.setLoading) this.setLoading(false);
+      }
+    },
+
+    goToManageSchedule() {
+      this.$router.push("/admin/schedule/manage");
+    },
+  },
+  async mounted() {
+    await this.fetchSchedule();
+  },
+};
+</script>
+
   <style scoped>
   </style>
   

@@ -114,8 +114,11 @@
   </div>
 </template>
 
+
+
 <script>
 import axios from "axios";
+import { inject } from "vue";
 
 export default {
   name: "AppointmentForm",
@@ -124,72 +127,82 @@ export default {
       formData: {
         name: "",
         contactNumber: "",
-        email: "", 
+        email: "",
         date: "",
-        time: null, 
+        time: null,
         description: "",
         personalNumber: "",
       },
-      availableDates: [], 
-      availableTimes: [], 
-      errorMessage: "", 
+      availableDates: [],
+      availableTimes: [],
+      errorMessage: "",
+      setLoading: null, 
     };
   },
+  created() {
+    this.setLoading = inject("setLoading"); 
+  },
   methods: {
-    fetchAvailableTimes() {
-      axios
-        .get("http://localhost/reservation-service/api/schedule/timeslots/available", {
-          withCredentials: true, 
-        })
-        .then((response) => {
-          const allTimeslots = response.data.available_timeslots;
-          this.availableDates = [
-            ...new Set(allTimeslots.map((timeslot) => timeslot.date)),
-          ];
-          if (this.formData.date) {
-            this.availableTimes = allTimeslots.filter(
-              (timeslot) => timeslot.date === this.formData.date
-            );
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching available times:", error.response?.data || error);
-        });
+    async fetchAvailableTimes() {
+      if (this.setLoading) this.setLoading(true); 
+      try {
+        const response = await axios.get(
+          "http://localhost/reservation-service/api/schedule/timeslots/available",
+          { withCredentials: true }
+        );
+        const allTimeslots = response.data.available_timeslots;
+        this.availableDates = [...new Set(allTimeslots.map((timeslot) => timeslot.date))];
+        if (this.formData.date) {
+          this.availableTimes = allTimeslots.filter(
+            (timeslot) => timeslot.date === this.formData.date
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching available times:", error.response?.data || error);
+      } finally {
+        if (this.setLoading) this.setLoading(false); 
+      }
     },
 
-    submitForm() {
+    async submitForm() {
       if (!this.formData.time) {
-        this.errorMessage = "Please select a time slot.";
+        this.errorMessage = "Prosím vyberte si časový slot.";
         return;
       }
+
       const appointmentData = {
         name: this.formData.name,
         personal_number: this.formData.personalNumber,
-        timeslot_id: this.formData.time.id, 
-        contact_number: this.formData.contactNumber, 
-        email: this.formData.email,  
+        timeslot_id: this.formData.time.id,
+        contact_number: this.formData.contactNumber,
+        email: this.formData.email,
         description: this.formData.description,
       };
 
-      axios
-        .post("http://localhost/reservation-service/api/appointments", appointmentData, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          console.log("Appointment created successfully:", response.data);
-          this.errorMessage = ""; 
-          this.$router.push("/success-page"); 
-        })
-        .catch((error) => {
-          if (error.response && error.response.status === 403) {
-            this.errorMessage = "Nesprávne zadané informácie. Prosím skontrolujte Meno a rodné číslo ešte raz.";
-          } else {
-            this.errorMessage = "Skontrolujte prosím Vaše údaje či sú správne ešte raz.";
-          }
-          console.error("Error creating appointment:", error.response?.data || error);
+      if (this.setLoading) this.setLoading(true); 
+
+      try {
+        await axios.post("http://localhost/reservation-service/api/appointments", appointmentData, {
+          headers: { "Content-Type": "application/json" },
         });
+
+        console.log("Appointment created successfully");
+        this.errorMessage = "";
+        this.$router.push("/success-page"); 
+      } catch (error) {
+        if (error.response && error.response.status === 429) {
+          this.errorMessage =
+            "Príliš veľa pokusov. Prosím počkajte 10 minút kým budete môcť znova odoslať formulár.";
+        } else if (error.response && error.response.status === 403) {
+          this.errorMessage =
+            "Nesprávne zadané informácie. Prosím skontrolujte Meno a rodné číslo ešte raz.";
+        } else {
+          this.errorMessage = "Skontrolujte prosím Vaše údaje či sú správne ešte raz.";
+        }
+        console.error("Error creating appointment:", error.response?.data || error);
+      } finally {
+        if (this.setLoading) this.setLoading(false); 
+      }
     },
   },
   mounted() {
@@ -199,4 +212,5 @@ export default {
 </script>
 
 <style scoped>
+
 </style>

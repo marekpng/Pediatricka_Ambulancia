@@ -93,23 +93,17 @@ const router = createRouter({
 });
 function isAuthenticated() {
   const token = localStorage.getItem('userToken');
-  return !!token; // Convert to boolean
+  return !!token; 
 }
 
-// Navigation guard to check authentication before accessing routes
 router.beforeEach((to, from, next) => {
-  // Check if the route requires authentication
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    // If authentication is required
     if (!isAuthenticated()) {
-      // If not authenticated, redirect to login page
       next('/login');
     } else {
-      // If authenticated, proceed to the route
       next();
     }
   } else {
-    // If the route doesn't require authentication, proceed to the route
     next();
   }
 });

@@ -146,35 +146,45 @@
       </div>
     </div>
   </template>
+
+  
+
 <script>
 import axios from "axios";
+import { inject } from "vue";
 
 export default {
   name: "ManageSchedules",
   data() {
     return {
-      schedules: [], 
-      groupedSchedules: {}, 
+      schedules: [],
+      groupedSchedules: {},
       selectedYear: null,
       selectedMonth: null,
       selectedDate: null,
-      editingTimeslot: null, 
+      editingTimeslot: null,
+      setLoading: null, 
     };
   },
+  created() {
+    this.setLoading = inject("setLoading"); 
+  },
   methods: {
-    fetchSchedules() {
-      axios
-        .get("http://localhost/reservation-service/api/schedule/all", {
+    async fetchSchedules() {
+      if (this.setLoading) this.setLoading(true);
+      try {
+        const response = await axios.get("http://localhost/reservation-service/api/schedule/all", {
           headers: { Authorization: `Bearer ${localStorage.getItem("userToken")}` },
-        })
-        .then((response) => {
-          this.schedules = response.data.timeslots;
-          this.groupSchedules();
-        })
-        .catch((error) => {
-          console.error("Error fetching schedules:", error.response?.data || error);
         });
+        this.schedules = response.data.timeslots;
+        this.groupSchedules();
+      } catch (error) {
+        console.error("Error fetching schedules:", error.response?.data || error);
+      } finally {
+        if (this.setLoading) this.setLoading(false);
+      }
     },
+
     groupSchedules() {
       this.groupedSchedules = this.schedules.reduce((acc, timeslot) => {
         const year = new Date(timeslot.date).getFullYear();
@@ -189,65 +199,73 @@ export default {
         return acc;
       }, {});
     },
+
     selectYear(year) {
       this.selectedYear = year;
       this.selectedMonth = null;
       this.selectedDate = null;
     },
+
     selectMonth(month) {
       this.selectedMonth = month;
       this.selectedDate = null;
     },
+
     selectDate(date) {
       this.selectedDate = date;
     },
+
     editTimeslot(timeslot) {
       this.editingTimeslot = { ...timeslot };
     },
-    saveTimeslot() {
-    const formattedStartTime = `${this.editingTimeslot.start_time}:00`;
-    const formattedEndTime = `${this.editingTimeslot.end_time}:00`;
 
-    axios
-        .put(
-        `http://localhost/reservation-service/api/schedule/timeslots/${this.editingTimeslot.id}`,
-        {
+    async saveTimeslot() {
+      if (this.setLoading) this.setLoading(true);
+      try {
+        const formattedStartTime = `${this.editingTimeslot.start_time}:00`;
+        const formattedEndTime = `${this.editingTimeslot.end_time}:00`;
+
+        await axios.put(
+          `http://localhost/reservation-service/api/schedule/timeslots/${this.editingTimeslot.id}`,
+          {
             date: this.editingTimeslot.date,
             start_time: formattedStartTime,
             end_time: formattedEndTime,
-        },
-        {
+          },
+          {
             headers: { Authorization: `Bearer ${localStorage.getItem("userToken")}` },
-        }
-        )
-        .then((response) => {
-        console.log(response.data.message);
-        this.editingTimeslot = null; 
-        this.fetchSchedules(); 
-        })
-        .catch((error) => {
+          }
+        );
+
+        this.editingTimeslot = null;
+        await this.fetchSchedules();
+      } catch (error) {
         console.error("Error updating timeslot:", error.response?.data || error);
-        });
+      } finally {
+        if (this.setLoading) this.setLoading(false);
+      }
     },
-    deleteTimeslot(id) {
-      axios
-        .delete(`http://localhost/reservation-service/api/schedule/timeslots/${id}`, {
+
+    async deleteTimeslot(id) {
+      if (this.setLoading) this.setLoading(true);
+      try {
+        await axios.delete(`http://localhost/reservation-service/api/schedule/timeslots/${id}`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("userToken")}` },
-        })
-        .then(() => {
-          this.fetchSchedules(); 
-        })
-        .catch((error) => {
-          console.error("Error deleting timeslot:", error.response?.data || error);
         });
+        await this.fetchSchedules();
+      } catch (error) {
+        console.error("Error deleting timeslot:", error.response?.data || error);
+      } finally {
+        if (this.setLoading) this.setLoading(false);
+      }
     },
+
     cancelEdit() {
-      this.editingTimeslot = null; 
+      this.editingTimeslot = null;
     },
   },
-  mounted() {
-    this.fetchSchedules();
+  async mounted() {
+    await this.fetchSchedules();
   },
 };
 </script>
-  

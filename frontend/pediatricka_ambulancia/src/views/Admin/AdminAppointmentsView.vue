@@ -90,21 +90,29 @@
     </div>
   </template>
   
+
+
+
   <script>
   import axios from "axios";
+  import { inject } from "vue";
   
   export default {
     name: "AdminAppointmentsView",
     data() {
       return {
-        appointments: [],         
-        filteredAppointments: [], 
-        availableDates: [],       
-        selectedDate: "",         
-        availableTimes: [],       
-        editingAppointment: null, 
-        editingDates: []         
+        appointments: [],
+        filteredAppointments: [],
+        availableDates: [],
+        selectedDate: "",
+        availableTimes: [],
+        editingAppointment: null,
+        editingDates: [],
+        setLoading: null,
       };
+    },
+    created() {
+      this.setLoading = inject("setLoading"); 
     },
     methods: {
       truncate(value) {
@@ -112,106 +120,126 @@
         const sanitized = value.replace(/(\r\n|\n|\r)/gm, "");
         return sanitized.length > 10 ? sanitized.substring(0, 10) + "..." : sanitized;
       },
-      fetchAppointments() {
-        axios
-          .get("http://localhost/reservation-service/api/admin/appointments", {
+  
+      async fetchAppointments() {
+        if (this.setLoading) this.setLoading(true);
+        try {
+          const response = await axios.get("http://localhost/reservation-service/api/admin/appointments", {
             headers: { Authorization: `Bearer ${localStorage.getItem("userToken")}` },
-          })
-          .then((response) => {
-            this.appointments = response.data.filter(appointment => appointment.status === "confirmed"); 
-            this.availableDates = [...new Set(this.appointments.map((appointment) => appointment.timeslot.date))];
-            this.filteredAppointments = this.appointments;
-          })
-          .catch((error) => {
-            console.error("Error fetching appointments:", error.response?.data || error);
           });
+          this.appointments = response.data.filter(appointment => appointment.status === "confirmed");
+          this.availableDates = [...new Set(this.appointments.map(appointment => appointment.timeslot.date))];
+          this.filteredAppointments = this.appointments;
+        } catch (error) {
+          console.error("Error fetching appointments:", error.response?.data || error);
+        } finally {
+          if (this.setLoading) this.setLoading(false);
+        }
       },
+  
       filterAppointmentsByDate() {
         this.filteredAppointments = this.selectedDate
           ? this.appointments.filter(appointment => appointment.timeslot.date === this.selectedDate)
           : this.appointments;
       },
-      editAppointment(appointment) {
-        this.editingAppointment = {
-          id: appointment.id,
-          description: appointment.description,
-          date: appointment.timeslot.date,
-          time: {
-            id: appointment.timeslot.id,
-            start_time: appointment.timeslot.start_time,
-            end_time: appointment.timeslot.end_time,
-          },
-        };
-        this.fetchEditingDates();
+  
+      async editAppointment(appointment) {
+        if (this.setLoading) this.setLoading(true);
+        try {
+          this.editingAppointment = {
+            id: appointment.id,
+            description: appointment.description,
+            date: appointment.timeslot.date,
+            time: {
+              id: appointment.timeslot.id,
+              start_time: appointment.timeslot.start_time,
+              end_time: appointment.timeslot.end_time,
+            },
+          };
+          await this.fetchEditingDates();
+        } catch (error) {
+          console.error("Error editing appointment:", error);
+        } finally {
+          if (this.setLoading) this.setLoading(false);
+        }
       },
-      fetchEditingDates() {
-        axios
-          .get("http://localhost/reservation-service/api/schedule/timeslots/available")
-          .then((response) => {
-            const timeslots = response.data.available_timeslots;
-            this.editingDates = [...new Set(timeslots.map((slot) => slot.date))];
-            this.fetchAvailableTimes();
-          })
-          .catch((error) => {
-            console.error("Error fetching available dates:", error.response?.data || error);
-          });
+  
+      async fetchEditingDates() {
+        if (this.setLoading) this.setLoading(true);
+        try {
+          const response = await axios.get("http://localhost/reservation-service/api/schedule/timeslots/available");
+          const timeslots = response.data.available_timeslots;
+          this.editingDates = [...new Set(timeslots.map(slot => slot.date))];
+          await this.fetchAvailableTimes();
+        } catch (error) {
+          console.error("Error fetching available dates:", error.response?.data || error);
+        } finally {
+          if (this.setLoading) this.setLoading(false);
+        }
       },
-      fetchAvailableTimes() {
+  
+      async fetchAvailableTimes() {
         if (!this.editingAppointment || !this.editingAppointment.date) return;
-        axios
-          .get("http://localhost/reservation-service/api/schedule/timeslots/available", {
+        if (this.setLoading) this.setLoading(true);
+        try {
+          const response = await axios.get("http://localhost/reservation-service/api/schedule/timeslots/available", {
             params: { start_date: this.editingAppointment.date, end_date: this.editingAppointment.date },
-          })
-          .then((response) => {
-            const timeslots = response.data.available_timeslots;
-            this.availableTimes = timeslots.filter(slot => slot.date === this.editingAppointment.date);
-          })
-          .catch((error) => {
-            console.error("Error fetching available times:", error.response?.data || error);
           });
+          this.availableTimes = response.data.available_timeslots.filter(slot => slot.date === this.editingAppointment.date);
+        } catch (error) {
+          console.error("Error fetching available times:", error.response?.data || error);
+        } finally {
+          if (this.setLoading) this.setLoading(false);
+        }
       },
-      saveAppointment() {
-        const updatedData = {
-          timeslot_id: this.editingAppointment.time.id,
-          description: this.editingAppointment.description,
-        };
-        axios
-          .put(
+  
+      async saveAppointment() {
+        if (this.setLoading) this.setLoading(true);
+        try {
+          await axios.put(
             `http://localhost/reservation-service/api/admin/appointments/${this.editingAppointment.id}`,
-            updatedData,
+            {
+              timeslot_id: this.editingAppointment.time.id,
+              description: this.editingAppointment.description,
+            },
             { headers: { Authorization: `Bearer ${localStorage.getItem("userToken")}` } }
-          )
-          .then(() => {
-            this.cancelEdit();
-            this.fetchAppointments();
-          })
-          .catch((error) => {
-            console.error("Error updating appointment:", error.response?.data || error);
-          });
+          );
+          this.cancelEdit();
+          await this.fetchAppointments();
+        } catch (error) {
+          console.error("Error updating appointment:", error.response?.data || error);
+        } finally {
+          if (this.setLoading) this.setLoading(false);
+        }
       },
-      deleteAppointment(id) {
-        axios
-          .delete(`http://localhost/reservation-service/api/admin/appointments/${id}`, {
+  
+      async deleteAppointment(id) {
+        if (this.setLoading) this.setLoading(true);
+        try {
+          await axios.delete(`http://localhost/reservation-service/api/admin/appointments/${id}`, {
             headers: { Authorization: `Bearer ${localStorage.getItem("userToken")}` },
-          })
-          .then(() => {
-            this.fetchAppointments();
-          })
-          .catch((error) => {
-            console.error("Error deleting appointment:", error.response?.data || error);
           });
+          await this.fetchAppointments();
+        } catch (error) {
+          console.error("Error deleting appointment:", error.response?.data || error);
+        } finally {
+          if (this.setLoading) this.setLoading(false);
+        }
       },
+  
       cancelEdit() {
         this.editingAppointment = null;
         this.availableTimes = [];
         this.editingDates = [];
-      }
+      },
     },
-    mounted() {
-      this.fetchAppointments();
-    }
+    async mounted() {
+      await this.fetchAppointments();
+    },
   };
   </script>
+  
+  
  <style scoped>
  .appointments-container {
    max-width: 1200px;
