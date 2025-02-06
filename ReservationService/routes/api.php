@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\PatientController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ScheduleController;
@@ -82,3 +83,25 @@ Route::middleware(['throttle:5,10'])->post('/appointments', [AppointmentControll
 Route::get('/admin/appointments', [AppointmentController::class, 'index']);
 Route::put('/admin/appointments/{id}', [AppointmentController::class, 'update']);
 Route::delete('/admin/appointments/{id}', [AppointmentController::class, 'destroy']);
+
+
+
+Route::get('/patients', [PatientController::class, 'getAllPatientsWithAppointments']);
+Route::post('/patients', [PatientController::class, 'createPatient']);
+Route::put('/patients/{id}', [PatientController::class, 'updatePatient']);
+Route::delete('/patients/{id}', [PatientController::class, 'deletePatient']);
+Route::post('/patients/{patientId}/appointments', [PatientController::class, 'createAppointmentForPatient']);
+Route::delete('/appointments/{id}', [PatientController::class, 'deleteAppointment']);
+
+
+
+Route::get('/patients', [PatientController::class, 'getAllPatientsWithAppointments']);
+Route::get('/patients/{id}', [PatientController::class, 'getPatientById']);
+Route::get('/patients/{id}/appointments', [PatientController::class, 'getPatientAppointments']);
+
+
+
+
+
+// Appointment CRUD
+Route::put('/appointments/{id}', [PatientController::class, 'updateAppointment']);
