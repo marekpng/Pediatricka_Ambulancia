@@ -15,6 +15,10 @@ import AdminDoctorContentView from '@/views/Admin/AdminDoctorContentView.vue';
 import BlogList from '@/components/Blogs.vue';
 import BlogDetail from '@/components/BlogDetail.vue';
 import AdminBlogManager from '@/views/Admin/AdminBlogManager.vue';
+import AdminTestimonialView from '@/views/Admin/AdminTestimonialView.vue';
+import AdminServiceView from '@/views/Admin/AdminServiceView.vue';
+import AdminPatientView from '@/views/Admin/AdminPatientView.vue';
+import AdminPatientDetailView from '@/views/Admin/AdminPatientDetailView.vue';
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -90,6 +94,26 @@ const router = createRouter({
       component: AdminBlogManager,
       meta: { requiresAuth: true }
     },
+    {
+      path: '/admin/testimonials/manage',
+      name: 'admin-testimonials-manage',
+      component: AdminTestimonialView,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/admin/service/manage',
+      name: 'admin-service-manage',
+      component: AdminServiceView,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/admin/patient',
+      name: 'admin-patient',
+      component: AdminPatientView,
+      meta: { requiresAuth: true }
+    },
+    { path: '/admin/patients/:id', component: AdminPatientDetailView, meta: { requiresAuth: true } },
+    
     { path: '/blogs', component: BlogList },
     { path: '/blog/:slug', component: BlogDetail, props: true },
     {

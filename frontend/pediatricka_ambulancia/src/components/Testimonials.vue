@@ -1,75 +1,63 @@
-
 <template>
+  <div class="container-xxl py-5">
+    <div class="container">
+      <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
+        <p class="d-inline-block border rounded-pill py-1 px-4">Povedali o nás</p>
+      </div>
+    </div>
+  </div>
   <div class="slider-container">
-    <div class="testimonial-item" v-for="(testimonial, index) in testimonials" :key="index"  v-show="index === currentSlide">
-      <!-- <img class="img-fluid bg-light rounded-circle p-2 mx-auto mb-4" :src="testimonial.image" style="width: 100px; height: 100px;" alt="testimonial image"> -->
+    <div
+      class="testimonial-item"
+      v-for="(testimonial, index) in testimonials"
+      :key="testimonial.id"
+      v-show="index === currentSlide"
+    >
       <div class="testimonial-text rounded text-center p-4">
-        <p>{{ testimonial.quote }}</p>
         <h5 class="mb-1">{{ testimonial.name }}</h5>
-        <span class="fst-italic">{{ testimonial.profession }}</span>
+        <p>{{ testimonial.quote }}</p>
+        <!-- <span class="fst-italic">{{ testimonial.profession }}</span> -->
       </div>
     </div>
 
-    <div class="swiper-button-prev" @click="prevSlide">
-    </div>
-    <div class="swiper-button-next" @click="nextSlide">
-    </div>
+    <div class="swiper-button-prev" @click="prevSlide"></div>
+    <div class="swiper-button-next" @click="nextSlide"></div>
   </div>
 </template>
+
 <script>
-
-
-
+import axios from "axios";
 
 export default {
-  name: "IndexView",
-  components: {
-
-  },
-  data () {
-
+  data() {
     return {
-
-
-      testimonials: [
-        {
-          name: "Miska Pastekova",
-          profession: "Predavacka",
-          quote: "Clita clita tempor justo dolor ipsum amet...",
-          image: "../src/image/testimonial-1.jpg"
-        },
-        {
-          name: "Jozko Mrkva",
-          profession: "Kurier",
-          quote: "Clita tempor tempor tempor tempor...",
-          image: "../src/image/testimonial-2.jpg"
-        },
-        {
-          name: "Ferdinand Remen",
-          profession: "Ucitel",
-          quote: "Clita clita clitaclita clitaclita clita...",
-          image: "../src/image/testimonial-3.jpg"
-        },
-
-      ],
+      testimonials: [],
       currentSlide: 0,
-
-    }
+    };
+  },
+  async mounted() {
+    await this.fetchTestimonials();
+    setInterval(this.nextSlide, 5000);
   },
   methods: {
+    async fetchTestimonials() {
+      try {
+        const response = await axios.get("http://localhost/content-service/api/testimonials");
+        this.testimonials = response.data;
+      } catch (error) {
+        console.error("Error fetching testimonials:", error);
+      }
+    },
     nextSlide() {
       this.currentSlide = (this.currentSlide + 1) % this.testimonials.length;
     },
     prevSlide() {
       this.currentSlide = (this.currentSlide + this.testimonials.length - 1) % this.testimonials.length;
     }
-  },
-  mounted() {
-    setInterval(this.nextSlide, 5000);
   }
-
-}
+};
 </script>
+
 
 <style scoped>
 @import 'swiper/swiper-bundle.css';

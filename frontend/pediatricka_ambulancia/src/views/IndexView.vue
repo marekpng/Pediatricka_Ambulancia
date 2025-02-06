@@ -93,76 +93,7 @@
   <!-- About End -->
 
   <!-- Service Start -->
-  <div class="container-xxl py-5">
-    <div class="container">
-      <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
-        <p class="d-inline-block border rounded-pill py-1 px-4">Služby</p>
-        <h1>Pediatrická starostlivosť pre vaše dieťa</h1>
-      </div>
-      <div class="row g-4">
-        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-          <div class="service-item bg-light rounded h-100 p-5">
-            <div class="d-inline-flex align-items-center justify-content-center bg-white rounded-circle mb-4" style="width: 65px; height: 65px;">
-              <i class="fa fa-heartbeat text-primary fs-4"></i>
-            </div>
-            <h4 class="mb-3">Očkovanie</h4>
-            <p class="mb-4">Podávame povinné aj nepovinné očkovania podľa odporúčaní Ministerstva zdravotníctva.</p>
-            <a class="btn" href=""><i class="fa fa-plus text-primary me-3"></i>Read More</a>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-          <div class="service-item bg-light rounded h-100 p-5">
-            <div class="d-inline-flex align-items-center justify-content-center bg-white rounded-circle mb-4" style="width: 65px; height: 65px;">
-              <i class="fa fa-x-ray text-primary fs-4"></i>
-            </div>
-            <h4 class="mb-3">Preventívne prehliadky</h4>
-            <p class="mb-4">Pravidelné kontroly zdravotného stavu detí od narodenia až po dospievanie.</p>
-            <a class="btn" href=""><i class="fa fa-plus text-primary me-3"></i>Read More</a>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-          <div class="service-item bg-light rounded h-100 p-5">
-            <div class="d-inline-flex align-items-center justify-content-center bg-white rounded-circle mb-4" style="width: 65px; height: 65px;">
-              <i class="fa fa-brain text-primary fs-4"></i>
-            </div>
-            <h4 class="mb-3">Liečba akútnych ochorení</h4>
-            <p class="mb-4">Diagnostika a liečba infekcií, chrípky, angíny, zápalu pľúc a iných detských ochorení.</p>
-            <a class="btn" href=""><i class="fa fa-plus text-primary me-3"></i>Read More</a>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-          <div class="service-item bg-light rounded h-100 p-5">
-            <div class="d-inline-flex align-items-center justify-content-center bg-white rounded-circle mb-4" style="width: 65px; height: 65px;">
-              <i class="fa fa-wheelchair text-primary fs-4"></i>
-            </div>
-            <h4 class="mb-3">Laboratórne vyšetrenia</h4>
-            <p class="mb-4">Odbery krvi, moču a iných biologických vzoriek na diagnostiku zdravotného stavu.</p>
-            <a class="btn" href=""><i class="fa fa-plus text-primary me-3"></i>Read More</a>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-          <div class="service-item bg-light rounded h-100 p-5">
-            <div class="d-inline-flex align-items-center justify-content-center bg-white rounded-circle mb-4" style="width: 65px; height: 65px;">
-              <i class="fa fa-tooth text-primary fs-4"></i>
-            </div>
-            <h4 class="mb-3">Poradenstvo pre rodičov</h4>
-            <p class="mb-4">Odborné rady o výžive, vývoji a starostlivosti o dieťa, vrátane dojčenia a očkovania.</p>
-            <a class="btn" href=""><i class="fa fa-plus text-primary me-3"></i>Read More</a>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-          <div class="service-item bg-light rounded h-100 p-5">
-            <div class="d-inline-flex align-items-center justify-content-center bg-white rounded-circle mb-4" style="width: 65px; height: 65px;">
-              <i class="fa fa-vials text-primary fs-4"></i>
-            </div>
-            <h4 class="mb-3">Vyšetrenie pred nástupom do škôlky/školy</h4>
-            <p class="mb-4">Komplexná zdravotná prehliadka potrebná pri nástupe dieťaťa do kolektívu.</p>
-            <a class="btn" href=""><i class="fa fa-plus text-primary me-3"></i>Read More</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+ <Service />
   <!-- Service End -->
 
 
@@ -265,6 +196,8 @@ import Doctors from "@/components/Doctors.vue";
 import AppointmentForm from "@/components/AppointmentForm.vue";
 import Counter from "@/components/Counter.vue";
 import Blogs from "@/components/Blogs.vue";
+import Service from "@/components/Service.vue";
+
 export default {
   name: "IndexView",
   components: {
@@ -272,7 +205,8 @@ export default {
     Testimonials,
     Doctors,
     AppointmentForm,
-    Blogs
+    Blogs,
+    Service
 
   },
   data () {

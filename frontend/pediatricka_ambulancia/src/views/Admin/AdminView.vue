@@ -5,9 +5,12 @@
       </div>
       <div class="dashboard-buttons">
         <button class="btn btn-primary" @click="navigateTo('admin/appointments')">Rezervácie</button>
+        <button class="btn btn-primary" @click="navigateTo('admin/patient')">Správa pacientov</button>
         <button class="btn btn-secondary" @click="navigateTo('admin/schedule')">Harmonogram</button>
         <button class="btn btn-secondary" @click="navigateTo('admin/doctor/manage')">Uprava obsahu Doktori </button>
         <button class="btn btn-secondary" @click="navigateTo('admin/blogs/manage')">Uprava obsahu blogov </button>
+        <button class="btn btn-secondary" @click="navigateTo('admin/testimonials/manage')">Uprava obsahu recenzii </button>
+        <button class="btn btn-secondary" @click="navigateTo('admin/service/manage')">Uprava obsahu sluzieb </button>
         <button class="btn btn-danger" @click="logout">Odhlásiť</button>
       </div>
     </div>

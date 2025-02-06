@@ -61,10 +61,19 @@
       this.fetchBlogPosts();
     },
     methods: {
+    getAuthHeaders() {
+      return {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+        },
+      };
+    },
       async fetchBlogPosts() {
         try {
           this.loading = true;
-          const response = await axios.get("http://localhost/content-service/api/blog-posts");
+          const response = await axios.get("http://localhost/content-service/api/blog-posts", 
+          this.getAuthHeaders()
+          );
           this.blogPosts = response.data;
         } catch (error) {
           console.error("Error fetching blog posts:", error);
@@ -81,7 +90,7 @@
             formData.append("image", this.image);
           }
   
-          await axios.post("http://localhost/content-service/api/blog-posts", formData);
+          await axios.post("http://localhost/content-service/api/blog-posts", formData, this.getAuthHeaders());
           this.fetchBlogPosts();
           this.resetForm();
         } catch (error) {
@@ -122,7 +131,7 @@
 
             const response = await axios.post(
             `http://localhost/content-service/api/blog-posts/${this.editingId}?_method=POST`,
-            formData
+            formData, this.getAuthHeaders()
             );
 
             console.log("Blog post updated successfully", response.data);
@@ -138,7 +147,7 @@
 
       async deleteBlogPost(id) {
         try {
-          await axios.delete(`http://localhost/content-service/api/blog-posts/${id}`);
+          await axios.delete(`http://localhost/content-service/api/blog-posts/${id}`, this.getAuthHeaders());
           this.fetchBlogPosts();
         } catch (error) {
           console.error("Error deleting blog post:", error);

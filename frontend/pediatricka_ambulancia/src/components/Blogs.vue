@@ -1,5 +1,3 @@
-  
-
    <template>
     <div class="container-xxl py-5">
       <div class="container">
@@ -7,12 +5,17 @@
           <p class="d-inline-block border rounded-pill py-1 px-4">Blog</p>
           <h1>Najnovšie články</h1>
         </div>
-        <div class="row g-4">
+  
+        <div v-if="loading" class="loading-container">
+          <img src="../assets/medical-loader.gif" alt="Loading..." class="loading-gif" />
+        </div>
+  
+        <div v-else class="row g-4">
           <div v-for="blog in blogPosts" :key="blog.id" class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
             <div class="blog-item bg-light rounded h-100 overflow-hidden">
-             
+              
               <div class="blog-img-container">
-                <img v-if="blog.image" :src="getBlogImage(blog.image)" class="img-fluid" alt="Blog Image">
+                <img v-if="blog.image" :src="getBlogImage(blog.image)" class="img-fluid" alt="Blog Image" />
                 <div v-else class="blog-placeholder">
                   <i class="fa fa-file-alt text-primary fs-4"></i>
                 </div>
@@ -25,28 +28,37 @@
                   <i class="fa fa-plus text-white me-2"></i> Čítať viac
                 </router-link>
               </div>
+  
             </div>
           </div>
         </div>
+  
       </div>
     </div>
   </template>
   
   <script>
   import axios from "axios";
+  import { inject } from "vue";
   
   export default {
     data() {
       return {
         blogPosts: [],
         loading: true,
+        setLoading: null,
       };
+    },
+    created() {
+      this.setLoading = inject("setLoading");
     },
     async mounted() {
       await this.fetchBlogPosts();
     },
     methods: {
       async fetchBlogPosts() {
+        if (this.setLoading) this.setLoading(true);
+        this.loading = true;
         try {
           const response = await axios.get("http://localhost/content-service/api/blog-posts");
           this.blogPosts = response.data;
@@ -54,13 +66,14 @@
           console.error("Error fetching blogs:", error);
         } finally {
           this.loading = false;
+          if (this.setLoading) this.setLoading(false);
         }
       },
       getBlogImage(imagePath) {
         return imagePath ? `http://localhost/content-service/storage/${imagePath}` : "/img/default-blog.jpg";
       },
       truncateText(content) {
-        const strippedContent = content.replace(/(<([^>]+)>)/gi, ""); 
+        const strippedContent = content.replace(/(<([^>]+)>)/gi, "");
         return strippedContent.length > 100 ? strippedContent.substring(0, 100) + "..." : strippedContent;
       },
     },
@@ -68,12 +81,11 @@
   </script>
   
   <style scoped>
-
   .blog-item {
     transition: transform 0.3s ease-in-out;
     cursor: pointer;
     text-align: center;
-    height: 100%; 
+    height: 100%;
     display: flex;
     flex-direction: column;
   }
@@ -82,7 +94,6 @@
     transform: scale(1.05);
   }
   
- 
   .blog-img-container {
     width: 100%;
     height: 50%;
@@ -95,7 +106,6 @@
     object-fit: cover;
   }
   
-  
   .blog-placeholder {
     width: 100%;
     height: 100%;
@@ -105,7 +115,6 @@
     justify-content: center;
   }
   
-
   .blog-content {
     height: 50%;
     text-align: center;
@@ -114,7 +123,6 @@
     justify-content: space-between;
   }
   
-
   .btn-primary {
     background-color: #007bff;
     border-color: #007bff;
@@ -123,6 +131,16 @@
   .btn-primary:hover {
     background-color: #0056b3;
     border-color: #0056b3;
+  }
+  
+  .loading-container {
+    text-align: center;
+    padding: 50px 0;
+  }
+  
+  .loading-gif {
+    width: 100px;
+    height: 100px;
   }
   </style>
   
