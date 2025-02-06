@@ -22,4 +22,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/send-verification-email', [EmailController::class, 'sendVerificationEmail']);
 Route::post('/send-confirmation-email', [EmailController::class, 'sendConfirmationEmail']);
+Route::post('/send-appointment-update-email', [EmailController::class, 'sendAppointmentUpdateEmail']);
 Route::get('/test', [EmailController::class, 'test']);
