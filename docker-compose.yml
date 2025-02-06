@@ -49,6 +49,21 @@ services:
       - backend
     ports:
       - "8081:8081"
+  #  Content Service
+  content_service:
+    build: ./docker/php
+    container_name: content_service_container
+    restart: always
+    volumes:
+      - ./ContentService:/var/www/content-service
+    working_dir: /var/www/content-service
+    command: php artisan serve --host=0.0.0.0 --port=8082
+    depends_on:
+      - mysql
+    networks:
+      - backend
+    ports:
+      - "8082:8082"
 
   email_service:
     build: ./docker/php
@@ -78,6 +93,8 @@ services:
     depends_on:
       - identify_service
       - reservation_service
+      - email_service
+      - content_service
     networks:
       - backend
 
