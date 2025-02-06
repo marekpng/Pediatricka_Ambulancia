@@ -11,7 +11,10 @@ import AdminScheduleView from '@/views/Admin/AdminScheduleView.vue';
 import AdminManageScheduleView from '@/views/Admin/AdminManageScheduleView.vue';
 import SuccessPageView from '@/views/SuccessPageView.vue';
 import VerificationSuccessView from '@/views/VerificationSuccessView.vue';
-
+import AdminDoctorContentView from '@/views/Admin/AdminDoctorContentView.vue';
+import BlogList from '@/components/Blogs.vue';
+import BlogDetail from '@/components/BlogDetail.vue';
+import AdminBlogManager from '@/views/Admin/AdminBlogManager.vue';
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -75,6 +78,20 @@ const router = createRouter({
       component: AdminManageScheduleView,
       meta: { requiresAuth: true }
     },
+    {
+      path: '/admin/doctor/manage',
+      name: 'admin-doctor-manage',
+      component: AdminDoctorContentView,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/admin/blogs/manage',
+      name: 'admin-blogs-manage',
+      component: AdminBlogManager,
+      meta: { requiresAuth: true }
+    },
+    { path: '/blogs', component: BlogList },
+    { path: '/blog/:slug', component: BlogDetail, props: true },
     {
       path: '/about',
       name: 'about',

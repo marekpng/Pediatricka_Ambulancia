@@ -1,6 +1,6 @@
 <template>
   <div class="counter-container border-start border-light ps-4">
-    <h2 class="text-white mb-1">{{ animatedNumber }}</h2>
+    <h2 class="text-white mb-1">{{ animatedNumber }}+ </h2>
     <p class="text-light mb-0">{{ label }}</p>
   </div>
 </template>

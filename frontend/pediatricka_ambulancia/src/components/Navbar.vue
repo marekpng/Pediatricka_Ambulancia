@@ -9,17 +9,17 @@
     </button>
     <div class="collapse navbar-collapse" :class="{ show: isNavCollapsed }" id="navbarCollapse">
       <div class="navbar-nav ms-auto p-4 p-lg-0">
-        <RouterLink to="/" class="nav-item nav-link" @click="closeNav">Home</RouterLink>
-        <RouterLink to="about" class="nav-item nav-link" @click="closeNav">About</RouterLink>
-        <RouterLink to="service" class="nav-item nav-link" @click="closeNav">Service</RouterLink>
-        <RouterLink to="contact" class="nav-item nav-link" @click="closeNav">Contact</RouterLink>
-        <RouterLink v-if="!isAdmin" to="login" class="nav-item nav-link" @click="closeNav">Prihlasit sa</RouterLink>
-        <RouterLink v-if="!isAdmin" to="register" class="nav-item nav-link" @click="closeNav">Registrovat sa</RouterLink>
+        <RouterLink to="/" class="nav-item nav-link" @click="closeNav">Domov</RouterLink>
+        <RouterLink to="about" class="nav-item nav-link" @click="closeNav">O nás</RouterLink>
+        <RouterLink to="service" class="nav-item nav-link" @click="closeNav">Služby</RouterLink>
+        <RouterLink to="contact" class="nav-item nav-link" @click="closeNav">Kontakt</RouterLink>
+        <RouterLink v-if="!isAdmin" to="login" class="nav-item nav-link" @click="closeNav">Prihlásiť sa</RouterLink>
+        <RouterLink v-if="!isAdmin" to="register" class="nav-item nav-link" @click="closeNav">Registrovať sa</RouterLink>
         
         <RouterLink v-if="isAdmin" to="/admin" class="nav-item nav-link" @click="closeNav">Admin</RouterLink>
       </div>
       <RouterLink to="/appointment" class="btn btn-primary clr rounded-0 py-4 px-lg-5 d-none d-lg-block">
-        Appointment<i class="fa fa-arrow-right ms-3"></i>
+        Rezervácia<i class="fa fa-arrow-right ms-3"></i>
       </RouterLink>
     </div>
   </nav>

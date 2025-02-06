@@ -3,9 +3,15 @@
     <div class="container">
       <div class="row g-5">
         <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
-          <p class="d-inline-block border rounded-pill py-1 px-4">Appointment</p>
-          <h1 class="mb-4">Make An Appointment To Visit Our Doctor</h1>
-          <p class="mb-4">Please select a date and time to book your appointment with the doctor.</p>
+          <p class="d-inline-block border rounded-pill py-1 px-4">Rezervácia termínu</p>
+          <h1 class="mb-4">Objednajte sa na vyšetrenie</h1>
+          <p class="mb-4">Objednávanie ONLINE môžu využívať iba pacienti, ktorí sú už evidovaní v našej ambulancii.  
+            Prosíme, vyplňte formulár a vyberte si z dostupných termínov a časov.</p>
+            <p class="mb-4">
+              Ak potrebujete <strong>akútne vyšetrenie</strong> a všetky termíny na daný deň sú obsadené,  
+              kontaktujte nás <strong>telefonicky na začiatku ordinačných hodín</strong>.  
+              Pokiaľ to bude možné, bude vám poskytnutý mimoriadny termín.
+            </p>
         </div>
         <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
           <div class="bg-light rounded h-100 d-flex align-items-center p-5">

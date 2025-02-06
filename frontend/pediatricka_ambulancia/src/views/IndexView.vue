@@ -5,50 +5,62 @@
   <div class="container-fluid header bg-primary p-0 mb-5">
     <div class="row g-0 align-items-center flex-column-reverse flex-lg-row">
       <div class="col-lg-6 p-5 wow fadeIn" data-wow-delay="0.1s">
-        <h1 class="display-4 text-white mb-5">Good Health Is The Root Of All Heppiness</h1>
+        <h1 class="display-4 text-white mb-5">Byť zdravý je základ každého šťastia.</h1>
         <div class="row g-4">
 
 
 
 <!--          Counter COMPONENT-->
           <div class="col-sm-4">
-            <Counter :finalNumber="123" label="Expert Doctors"/>
+            <Counter :finalNumber="30" label="Rokov praxe."/>
           </div>
-          <div class="col-sm-4">
+          <!-- <div class="col-sm-4">
             <Counter :finalNumber="1234" label="Medical Stuff"/>
-          </div>
+          </div> -->
           <div class="col-sm-4">
-            <Counter :finalNumber="12345" label="Total Patients"/>
+            <Counter :finalNumber="1500" label="Total Patients"/>
           </div>
 <!--          Counter COMPONENT-->
         </div>
       </div>
 
 
+
       <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
-        <div class="owl-carousel header-carousel">
-
-
-          <div id="slider-internet" class="slider-container">
-            <div class="slides-group">
-              <div v-for="(slide, index) in slides" :key="index" class="slide-internet" v-show="index === current">
-                <div class="content-container">
-                  <img class="img-fluid" :src="'/img/' + slide.className" alt="">
-                  <div class="text-container">
-                    <h1 class="display-1 text-white mb-0">{{ slide.specialization }}</h1>
-                  </div>
-                </div>
+    <div class="owl-carousel header-carousel">
+      <div id="slider-internet" class="slider-container">
+        <div class="slides-group">
+          <div 
+            v-for="(slide, index) in slides" 
+            :key="index" 
+            class="slide-internet" 
+            v-show="index === current"
+          >
+            <div class="content-container">
+              <img class="img-fluid" :src="'/img/' + slide.className" :alt="slide.specialization">
+              <div class="text-container">
+                <h1 class="display-1 text-white mb-0">{{ slide.specialization }}</h1>
               </div>
             </div>
-            <div class="btn-internet btn-internet-prev" aria-label="Previous slide" @click="prevSlide">&#10094;</div>
-            <div class="btn-internet btn-internet-next" aria-label="Next slide" @click="nextSlide">&#10095;</div>
           </div>
+        </div>
 
+        <button class="btn-internet btn-internet-prev" @click="prevSlide">&#10094;</button>
+        <button class="btn-internet btn-internet-next" @click="nextSlide">&#10095;</button>
 
-
-
+        <div class="dots-container">
+          <span 
+            v-for="(slide, index) in slides" 
+            :key="'dot-' + index" 
+            class="dot" 
+            :class="{ active: index === current }"
+            @click="goToSlide(index)"
+          ></span>
         </div>
       </div>
+    </div>
+  </div>
+
 
     </div>
   </div>
@@ -66,14 +78,14 @@
           </div>
         </div>
         <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
-          <p class="d-inline-block border rounded-pill py-1 px-4">About Us</p>
-          <h1 class="mb-4">Why You Should Trust Us? Get Know About Us!</h1>
-          <p>Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet</p>
-          <p class="mb-4">Stet no et lorem dolor et diam, amet duo ut dolore vero eos. No stet est diam rebum amet diam ipsum. Clita clita labore, dolor duo nonumy clita sit at, sed sit sanctus dolor eos.</p>
-          <p><i class="far fa-check-circle text-primary me-3"></i>Quality health care</p>
-          <p><i class="far fa-check-circle text-primary me-3"></i>Only Qualified Doctors</p>
-          <p><i class="far fa-check-circle text-primary me-3"></i>Medical Research Professionals</p>
-          <a class="btn btn-primary rounded-pill py-3 px-5 mt-3" href="">Read More</a>
+          <p class="d-inline-block border rounded-pill py-1 px-4">O nás</p>
+          <h1 class="mb-4">Prečo by ste nám mali dôverovať? Spoznajte nás bližšie!</h1>
+          <p>V našej pediatrickej ambulancii sa staráme o zdravie vašich detí s maximálnou odbornosťou a starostlivosťou. Na čele ambulancie stojí skúsený pediater, ktorý sa venuje diagnostike, prevencii a liečbe detských pacientov s individuálnym a láskavým prístupom. Pomáha mu tím troch kvalifikovaných zdravotných sestier, ktoré zabezpečujú plynulý chod ordinácie a starajú sa o pohodlie malých pacientov aj ich rodičov.</p>
+          <p class="mb-4">Zakladáme si na kvalitnej zdravotnej starostlivosti, sledujeme najnovšie medicínske postupy a pristupujeme ku každému dieťaťu s porozumením a trpezlivosťou. Naším cieľom je, aby sa deti u nás cítili príjemne a rodičia mali istotu, že ich dieťa je v tých najlepších rukách.</p>
+          <p><i class="far fa-check-circle text-primary me-3"></i>Kvalitná zdravotná starostlivosť</p>
+          <p><i class="far fa-check-circle text-primary me-3"></i>Ľudský prístup</p>
+          <p><i class="far fa-check-circle text-primary me-3"></i>Návšteva bez čakania</p>
+          <!-- <a class="btn btn-primary rounded-pill py-3 px-5 mt-3" href="">Read More</a> -->
         </div>
       </div>
     </div>
@@ -84,8 +96,8 @@
   <div class="container-xxl py-5">
     <div class="container">
       <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
-        <p class="d-inline-block border rounded-pill py-1 px-4">Services</p>
-        <h1>Health Care Solutions</h1>
+        <p class="d-inline-block border rounded-pill py-1 px-4">Služby</p>
+        <h1>Pediatrická starostlivosť pre vaše dieťa</h1>
       </div>
       <div class="row g-4">
         <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
@@ -93,8 +105,8 @@
             <div class="d-inline-flex align-items-center justify-content-center bg-white rounded-circle mb-4" style="width: 65px; height: 65px;">
               <i class="fa fa-heartbeat text-primary fs-4"></i>
             </div>
-            <h4 class="mb-3">Cardiology</h4>
-            <p class="mb-4">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.</p>
+            <h4 class="mb-3">Očkovanie</h4>
+            <p class="mb-4">Podávame povinné aj nepovinné očkovania podľa odporúčaní Ministerstva zdravotníctva.</p>
             <a class="btn" href=""><i class="fa fa-plus text-primary me-3"></i>Read More</a>
           </div>
         </div>
@@ -103,8 +115,8 @@
             <div class="d-inline-flex align-items-center justify-content-center bg-white rounded-circle mb-4" style="width: 65px; height: 65px;">
               <i class="fa fa-x-ray text-primary fs-4"></i>
             </div>
-            <h4 class="mb-3">Pulmonary</h4>
-            <p class="mb-4">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.</p>
+            <h4 class="mb-3">Preventívne prehliadky</h4>
+            <p class="mb-4">Pravidelné kontroly zdravotného stavu detí od narodenia až po dospievanie.</p>
             <a class="btn" href=""><i class="fa fa-plus text-primary me-3"></i>Read More</a>
           </div>
         </div>
@@ -113,8 +125,8 @@
             <div class="d-inline-flex align-items-center justify-content-center bg-white rounded-circle mb-4" style="width: 65px; height: 65px;">
               <i class="fa fa-brain text-primary fs-4"></i>
             </div>
-            <h4 class="mb-3">Neurology</h4>
-            <p class="mb-4">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.</p>
+            <h4 class="mb-3">Liečba akútnych ochorení</h4>
+            <p class="mb-4">Diagnostika a liečba infekcií, chrípky, angíny, zápalu pľúc a iných detských ochorení.</p>
             <a class="btn" href=""><i class="fa fa-plus text-primary me-3"></i>Read More</a>
           </div>
         </div>
@@ -123,8 +135,8 @@
             <div class="d-inline-flex align-items-center justify-content-center bg-white rounded-circle mb-4" style="width: 65px; height: 65px;">
               <i class="fa fa-wheelchair text-primary fs-4"></i>
             </div>
-            <h4 class="mb-3">Orthopedics</h4>
-            <p class="mb-4">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.</p>
+            <h4 class="mb-3">Laboratórne vyšetrenia</h4>
+            <p class="mb-4">Odbery krvi, moču a iných biologických vzoriek na diagnostiku zdravotného stavu.</p>
             <a class="btn" href=""><i class="fa fa-plus text-primary me-3"></i>Read More</a>
           </div>
         </div>
@@ -133,8 +145,8 @@
             <div class="d-inline-flex align-items-center justify-content-center bg-white rounded-circle mb-4" style="width: 65px; height: 65px;">
               <i class="fa fa-tooth text-primary fs-4"></i>
             </div>
-            <h4 class="mb-3">Dental Surgery</h4>
-            <p class="mb-4">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.</p>
+            <h4 class="mb-3">Poradenstvo pre rodičov</h4>
+            <p class="mb-4">Odborné rady o výžive, vývoji a starostlivosti o dieťa, vrátane dojčenia a očkovania.</p>
             <a class="btn" href=""><i class="fa fa-plus text-primary me-3"></i>Read More</a>
           </div>
         </div>
@@ -143,8 +155,8 @@
             <div class="d-inline-flex align-items-center justify-content-center bg-white rounded-circle mb-4" style="width: 65px; height: 65px;">
               <i class="fa fa-vials text-primary fs-4"></i>
             </div>
-            <h4 class="mb-3">Laboratory</h4>
-            <p class="mb-4">Erat ipsum justo amet duo et elitr dolor, est duo duo eos lorem sed diam stet diam sed stet.</p>
+            <h4 class="mb-3">Vyšetrenie pred nástupom do škôlky/školy</h4>
+            <p class="mb-4">Komplexná zdravotná prehliadka potrebná pri nástupe dieťaťa do kolektívu.</p>
             <a class="btn" href=""><i class="fa fa-plus text-primary me-3"></i>Read More</a>
           </div>
         </div>
@@ -160,9 +172,10 @@
       <div class="row g-0 mx-lg-0">
         <div class="col-lg-6 feature-text py-5 wow fadeIn" data-wow-delay="0.1s">
           <div class="p-lg-5 ps-lg-0">
-            <p class="d-inline-block border rounded-pill text-light py-1 px-4">Features</p>
-            <h1 class="text-white mb-4">Why Choose Us</h1>
-            <p class="text-white mb-4 pb-2">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo erat amet</p>
+            <p class="d-inline-block border rounded-pill text-light py-1 px-4">Naše výhody</p>
+            <h1 class="text-white mb-4">Prečo si vybrať práve nás</h1>
+            <p class="text-white mb-4 pb-2">Naša pediatrická ambulancia ponúka odbornú starostlivosť pre deti od narodenia až po dospievanie. 
+              S dlhoročnými skúsenosťami a individuálnym prístupom sa staráme o zdravie vašich najmenších.</p>
             <div class="row g-4">
               <div class="col-6">
                 <div class="d-flex align-items-center">
@@ -170,8 +183,8 @@
                     <i class="fa fa-user-md text-primary"></i>
                   </div>
                   <div class="ms-4">
-                    <p class="text-white mb-2">Experience</p>
-                    <h5 class="text-white mb-0">Doctors</h5>
+                    <p class="text-white mb-2">Dlhoročné</p>
+                    <h5 class="text-white mb-0">Skúsenosti</h5>
                   </div>
                 </div>
               </div>
@@ -181,8 +194,8 @@
                     <i class="fa fa-check text-primary"></i>
                   </div>
                   <div class="ms-4">
-                    <p class="text-white mb-2">Quality</p>
-                    <h5 class="text-white mb-0">Services</h5>
+                    <p class="text-white mb-2">Kvalitná</p>
+                    <h5 class="text-white mb-0">Starostlivosť</h5>
                   </div>
                 </div>
               </div>
@@ -192,19 +205,19 @@
                     <i class="fa fa-comment-medical text-primary"></i>
                   </div>
                   <div class="ms-4">
-                    <p class="text-white mb-2">Positive</p>
-                    <h5 class="text-white mb-0">Consultation</h5>
+                    <p class="text-white mb-2">Profesionálne</p>
+                    <h5 class="text-white mb-0">Poradenstvo</h5>
                   </div>
                 </div>
               </div>
               <div class="col-6">
                 <div class="d-flex align-items-center">
                   <div class="d-flex flex-shrink-0 align-items-center justify-content-center rounded-circle bg-light" style="width: 55px; height: 55px;">
-                    <i class="fa fa-headphones text-primary"></i>
+                    <i class="fa fa-smile text-primary"></i>
                   </div>
                   <div class="ms-4">
-                    <p class="text-white mb-2">24 Hours</p>
-                    <h5 class="text-white mb-0">Support</h5>
+                    <p class="text-white mb-2">Prívetivý</p>
+                    <h5 class="text-white mb-0">Prístup k deťom</h5>
                   </div>
                 </div>
               </div>
@@ -240,7 +253,7 @@
 
 <Testimonials/>
 
-
+<Blogs />
   </body>
 
 </template>
@@ -251,45 +264,57 @@ import Testimonials from "@/components/Testimonials.vue";
 import Doctors from "@/components/Doctors.vue";
 import AppointmentForm from "@/components/AppointmentForm.vue";
 import Counter from "@/components/Counter.vue";
-
+import Blogs from "@/components/Blogs.vue";
 export default {
   name: "IndexView",
   components: {
     Counter,
     Testimonials,
     Doctors,
-    AppointmentForm
+    AppointmentForm,
+    Blogs
 
   },
   data () {
 
     return {
-
-
       current: 0,
-
-      // transitionName: "fade",
-      // show: false,
       slides: [
         { className: "carousel-1.jpg", specialization: "cardiology" },
         { className: "carousel-2.jpg", specialization: "pediatric" },
         { className: "carousel-3.jpg", specialization: "neorology" }
       ],
+      autoSlideInterval: null
 
     }
   },
   methods: {
 
     nextSlide() {
-      this.current = (this.current + 1) % this.slides.length; // Posun na ďalší slide
+      this.current = (this.current + 1) % this.slides.length; 
     },
     prevSlide() {
-      this.current = (this.current + this.slides.length - 1) % this.slides.length; // Posun na predchádzajúci slide
+      this.current = (this.current + this.slides.length - 1) % this.slides.length; 
     },
+    goToSlide(index) {
+      this.current = index;
+    },
+    startAutoSlide() {
+      this.autoSlideInterval = setInterval(() => {
+        this.nextSlide();
+      }, 5000); 
+    },
+    stopAutoSlide() {
+      clearInterval(this.autoSlideInterval);
+    }
 
   },
   mounted() {
     this.show = true;
+    this.startAutoSlide();
+  },
+  beforeUnmount() {
+    this.stopAutoSlide();
   }
 }
 </script>
@@ -299,40 +324,11 @@ export default {
 
 
 
-.btn-internet {
-  z-index: 10;
-  cursor: pointer;
-  border: 3px solid #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 70px;
-  height: 70px;
-  position: absolute;
-  top: calc(50% - 35px);
-  left: 1%;
-  transition: transform 0.3s ease-in-out;
-  user-select: none;
-}
 
-.btn-internet-next {
-  left: auto;
-  right: 1%;
-}
-
-.btn-internet:hover {
-  /*transform: scale();*/
-  background-color: #4d4e52;
-}
-
-/*Koniec defaultu*/
-
-
-
-/*Konzistentnejsie riesenie*/
 #slider-internet {
   position: relative;
   overflow: hidden;
+  border-radius: 12px;
 }
 
 .slides-group {
@@ -350,42 +346,84 @@ export default {
 .content-container {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   height: 100%;
   position: relative;
 }
 
 .text-container {
-  color: #000;
-  padding: 20px;
-  text-align: left;
   position: absolute;
-  bottom: 25%;
+  bottom: 20%;
   left: 50%;
   transform: translateX(-50%);
-}
-
-.img-fluid {
-  max-width: 100%;
-  max-height: 100%;
+  color: white;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+  text-align: center;
 }
 
 .btn-internet {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 24px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  z-index: 10;
 }
 
 .btn-internet-prev {
-  left: 10px;
+  left: 15px;
 }
 
 .btn-internet-next {
-  right: 10px;
+  right: 15px;
 }
 
+.btn-internet:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+  color: black;
+  transform: scale(1.1);
+}
+
+.img-fluid {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.dots-container {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  background-color: white;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.dot.active {
+  background-color: black;
+  transform: scale(1.2);
+}
 
 
 

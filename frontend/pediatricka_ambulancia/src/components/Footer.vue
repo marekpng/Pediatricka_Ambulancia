@@ -4,10 +4,10 @@
     <div class="container py-5">
       <div class="row g-5">
         <div class="col-lg-3 col-md-6">
-          <h5 class="text-light mb-4">Address</h5>
-          <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Street, New York, USA</p>
-          <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+012 345 67890</p>
-          <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@example.com</p>
+          <h5 class="text-light mb-4">Adresa</h5>
+          <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Sládkovičova 13, 96501 Žiar nad Hronom, Slovensko</p>
+          <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+	456725009</p>
+          <p class="mb-2"><i class="fa fa-envelope me-3"></i>risnovskaambulancia@gmail.com</p>
           <div class="d-flex pt-2">
             <a class="btn btn-outline-light btn-social rounded-circle" href=""><i class="fab fa-twitter"></i></a>
             <a class="btn btn-outline-light btn-social rounded-circle" href=""><i class="fab fa-facebook-f"></i></a>
@@ -67,14 +67,13 @@ name: "Footer"
 
 <style scoped>
 .btn.btn-link {
-  color: white;           /* Set the text color to white */
-  text-decoration: none;  /* Remove the underline from the link */
+  color: white;         
+  text-decoration: none;  
 }
 
-/* Optional: Change color on hover to indicate interactivity */
 .btn.btn-link:hover {
-  color: #e6e6e6; /* A slightly lighter white for a hover effect */
-  text-decoration: none; /* Ensure the underline doesn't appear on hover */
+  color: #e6e6e6; 
+  text-decoration: none;
 }
 a {
   color: #e6e6e6;
