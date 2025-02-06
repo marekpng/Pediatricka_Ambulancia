@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\BlogPostController;
 use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\TestimonialController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -35,3 +37,17 @@ Route::post('/blog-posts', [BlogPostController::class, 'store']);
 Route::post('/blog-posts/{id}', [BlogPostController::class, 'update']);
 
 Route::delete('/blog-posts/{id}', [BlogPostController::class, 'destroy']);
+
+
+
+Route::get('/testimonials', [TestimonialController::class, 'index']);
+Route::post('/testimonials', [TestimonialController::class, 'store']);
+Route::put('/testimonials/{id}', [TestimonialController::class, 'update']);
+Route::delete('/testimonials/{id}', [TestimonialController::class, 'destroy']);
+
+
+Route::get('/services', [ServiceController::class, 'index']);
+Route::post('/services', [ServiceController::class, 'store']);
+Route::get('/services/{id}', [ServiceController::class, 'show']);
+Route::put('/services/{id}', [ServiceController::class, 'update']);
+Route::delete('/services/{id}', [ServiceController::class, 'destroy']);
