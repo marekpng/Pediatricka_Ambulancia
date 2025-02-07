@@ -18,7 +18,7 @@
 
 <script>
 import axios from 'axios';
-
+import { inject } from "vue";
 export default {
   name: 'Login',
   data() {
@@ -26,35 +26,51 @@ export default {
       loginData: {
         email: '',
         password: ''
-      }
+      },
+      setLoading: null,
     };
   },
-  methods: {
-    login() {
-      axios.post('http://localhost/identify-service/api/login', this.loginData)
-          .then(response => {
-            console.log('Login successful:', response.data);
-            const token = response.data.token;
-            localStorage.setItem('userToken', token);
-            window.location.href = '/admin';
-          })
-          .catch(error => {
-            console.error('Error logging in:', error.response.data);
-          });
+  created() {
+      this.setLoading = inject("setLoading"); 
     },
-    logout() {
-      axios.post('http://localhost/identify-service/api/logout', {}, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('userToken')}` }
-      })
-          .then(response => {
-            console.log(response.data);
-            localStorage.removeItem('userToken');
-            window.location.href = '/';
-          })
-          .catch(error => {
-            console.error('Error logging out:', error);
-          });
+  methods: {
+    async login() {
+      if (this.setLoading) this.setLoading(true);
+      try {
+        const response = await axios.post('http://localhost/identify-service/api/login', this.loginData);
+        console.log('Login successful:', response.data);
+
+        const token = response.data.token;
+        localStorage.setItem('userToken', token);
+
+        window.location.href = '/admin'; 
+      } catch (error) {
+        console.error('Error logging in:', error.response?.data || error);
+      } finally {
+        if (this.setLoading) this.setLoading(false);
+      }
+    },
+
+    async logout() {
+    this.setLoading = inject("setLoading");
+
+    if (this.setLoading) this.setLoading(true);
+      try {
+        const response = await axios.post('http://localhost/identify-service/api/logout', {}, {
+          headers: { Authorization: `Bearer ${localStorage.getItem('userToken')}` }
+        });
+
+        console.log(response.data);
+
+        localStorage.removeItem('userToken');
+        window.location.href = '/'; 
+      } catch (error) {
+        console.error('Error logging out:', error.response?.data || error);
+      } finally {
+        if (this.setLoading) this.setLoading(false);
+      }
     }
+
   }
 }
 </script>

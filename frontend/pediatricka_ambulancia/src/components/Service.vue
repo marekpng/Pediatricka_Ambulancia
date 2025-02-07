@@ -19,7 +19,7 @@
               </div>
               <h4 class="mb-3">{{ service.title }}</h4>
               <p class="mb-4">{{ service.description }}</p>
-              <a class="btn" href="#"><i class="fa fa-plus text-primary me-3"></i>Read More</a>
+              <!-- <a class="btn" href="#"><i class="fa fa-plus text-primary me-3"></i>Read More</a> -->
             </div>
           </div>
         </div>

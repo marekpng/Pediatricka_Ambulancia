@@ -18,7 +18,7 @@
             <Counter :finalNumber="1234" label="Medical Stuff"/>
           </div> -->
           <div class="col-sm-4">
-            <Counter :finalNumber="1500" label="Total Patients"/>
+            <Counter :finalNumber="1500" label="Celkový počet pacientov"/>
           </div>
 <!--          Counter COMPONENT-->
         </div>
@@ -171,7 +171,7 @@
   <Doctors />
   <!-- Team End -->
 
-
+  <Blogs />
 
 
   <AppointmentForm />
@@ -184,7 +184,7 @@
 
 <Testimonials/>
 
-<Blogs />
+
   </body>
 
 </template>

@@ -13,8 +13,8 @@
         <RouterLink to="about" class="nav-item nav-link" @click="closeNav">O nás</RouterLink>
         <RouterLink to="service" class="nav-item nav-link" @click="closeNav">Služby</RouterLink>
         <RouterLink to="contact" class="nav-item nav-link" @click="closeNav">Kontakt</RouterLink>
-        <RouterLink v-if="!isAdmin" to="login" class="nav-item nav-link" @click="closeNav">Prihlásiť sa</RouterLink>
-        <RouterLink v-if="!isAdmin" to="register" class="nav-item nav-link" @click="closeNav">Registrovať sa</RouterLink>
+        <!-- <RouterLink v-if="!isAdmin" to="login" class="nav-item nav-link" @click="closeNav">Prihlásiť sa</RouterLink> -->
+        <!-- <RouterLink v-if="!isAdmin" to="register" class="nav-item nav-link" @click="closeNav">Registrovať sa</RouterLink> -->
         
         <RouterLink v-if="isAdmin" to="/admin" class="nav-item nav-link" @click="closeNav">Admin</RouterLink>
       </div>
