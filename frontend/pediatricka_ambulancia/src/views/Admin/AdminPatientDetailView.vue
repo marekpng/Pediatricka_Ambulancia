@@ -2,9 +2,7 @@
     <div class="admin-container">
       <h1 class="title">Patient Details</h1>
   
-      <div v-if="loading" class="loading-overlay">
-        <img src="../../assets/medical-loader.gif" alt="Loading..." class="loading-gif" />
-      </div>
+      
   
       <div v-if="patient">
         <div class="patient-info card">
@@ -18,6 +16,8 @@
               {{ editMode ? "Cancel Edit" : "Edit Patient" }}
             </button>
             <button @click="deletePatient" class="btn btn-danger">Delete Patient</button>
+            
+            <button @click="openCreateAppointmentModal" class="btn btn-success">Create Appointment</button>
           </div>
   
           <div v-if="editMode" class="edit-form">
@@ -85,11 +85,65 @@
           </div>
         </div>
       </div>
+
+
+<div v-if="showCreateAppointmentModal" class="modal-overlay">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5>Create New Appointment</h5>
+        <button type="button" class="close-btn" @click="showCreateAppointmentModal = false">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form @submit.prevent="createAppointment">
+          <div class="form-group">
+            <label for="appointment-date" class="form-label">Date</label>
+            <select id="appointment-date" class="form-control" v-model="selectedDate" @change="fetchAvailableTimes" required>
+              <option value="" disabled>Select a date</option>
+              <option v-for="date in availableDates" :value="date" :key="date">{{ date }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="appointment-time" class="form-label">Time</label>
+            <select id="appointment-time" class="form-control" v-model="newAppointment.timeslot_id" :disabled="!availableTimes.length" required>
+              <option value="" disabled>Select a time</option>
+              <option v-for="slot in availableTimes" :value="slot.id" :key="slot.id">
+                {{ slot.start_time }} - {{ slot.end_time }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="appointment-phone" class="form-label">Contact number</label>
+            <input id="appointment-phone" type="phone" class="form-control" v-model="newAppointment.contact_number" placeholder="Enter mobile" required />
+          </div>
+          <div class="form-group">
+            <label for="appointment-email" class="form-label">Email</label>
+            <input id="appointment-email" type="email" class="form-control" v-model="newAppointment.email" placeholder="Enter email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="appointment-description" class="form-label">Description</label>
+            <textarea id="appointment-description" class="form-control" v-model="newAppointment.description" placeholder="Enter appointment description" required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-success modal-save-btn">Create Appointment</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
     </div>
   </template>
   <script>
   import axios from "axios";
-  
+  import { inject } from "vue";
+
   export default {
     data() {
       return {
@@ -100,6 +154,13 @@
         selectedDate: "",
         editMode: false,
         editAppointmentMode: false,
+        showCreateAppointmentModal: false,
+        newAppointment: {
+          timeslot_id: "",
+          contact_number: "",
+          email: "",
+          description: "",
+        },
         editData: {
           name: "",
           date_of_birth: "",
@@ -107,13 +168,20 @@
           address: "",
         },
         editAppointmentData: {},
-        loading: false,
+        setLoading: null,
       };
+    },
+    created() {
+      this.setLoading = inject("setLoading"); 
     },
     async mounted() {
       await this.fetchPatient();
     },
     methods: {
+      openCreateAppointmentModal() {
+        this.showCreateAppointmentModal = true;
+        this.fetchAvailableTimes(); 
+      },
       getAuthHeaders() {
         return {
           headers: {
@@ -122,7 +190,7 @@
         };
       },
       async fetchPatient() {
-        this.loading = true;
+        if (this.setLoading) this.setLoading(true);
         try {
           const response = await axios.get(
             `http://localhost/reservation-service/api/patients/${this.$route.params.id}`,
@@ -133,11 +201,11 @@
         } catch (error) {
           console.error("Error fetching patient:", error);
         } finally {
-          this.loading = false;
+          if (this.setLoading) this.setLoading(false);
         }
       },
       async updatePatient() {
-        this.loading = true;
+        if (this.setLoading) this.setLoading(true);
         try {
           await axios.put(
             `http://localhost/reservation-service/api/patients/${this.patient.id}`,
@@ -149,12 +217,12 @@
         } catch (error) {
           console.error("Error updating patient:", error);
         } finally {
-          this.loading = false;
+          if (this.setLoading) this.setLoading(false);
         }
       },
       async deletePatient() {
         if (!confirm("Are you sure you want to delete this patient?")) return;
-        this.loading = true;
+        if (this.setLoading) this.setLoading(true);
         try {
           await axios.delete(
             `http://localhost/reservation-service/api/patients/${this.patient.id}`,
@@ -164,11 +232,11 @@
         } catch (error) {
           console.error("Error deleting patient:", error);
         } finally {
-          this.loading = false;
+          if (this.setLoading) this.setLoading(false);
         }
       },
       async fetchAppointments() {
-        this.loading = true;
+        if (this.setLoading) this.setLoading(true);
         try {
           const response = await axios.get(
             `http://localhost/reservation-service/api/patients/${this.patient.id}/appointments`,
@@ -178,10 +246,11 @@
         } catch (error) {
           console.error("Error fetching appointments:", error);
         } finally {
-          this.loading = false;
+          if (this.setLoading) this.setLoading(false);
         }
       },
       async fetchAvailableTimes() {
+        if (this.setLoading) this.setLoading(true);
         try {
           this.availableTimes = [];
           this.availableDates = [];
@@ -204,10 +273,12 @@
           }
         } catch (error) {
           console.error("Error fetching available times:", error);
+        } finally {
+          if (this.setLoading) this.setLoading(false);
         }
       },
       async updateAppointment() {
-        this.loading = true;
+        if (this.setLoading) this.setLoading(true);
         try {
           await axios.put(
             `http://localhost/reservation-service/api/appointments/${this.editAppointmentData.id}`,
@@ -220,7 +291,7 @@
         } catch (error) {
           console.error("Error updating appointment:", error);
         } finally {
-          this.loading = false;
+          if (this.setLoading) this.setLoading(false);
         }
       },
       editAppointment(appointment) {
@@ -231,7 +302,7 @@
       },
       async deleteAppointment(id) {
         if (!confirm("Are you sure you want to delete this appointment?")) return;
-        this.loading = true;
+        if (this.setLoading) this.setLoading(true);
         try {
           await axios.delete(
             `http://localhost/reservation-service/api/appointments/${id}`,
@@ -241,9 +312,30 @@
         } catch (error) {
           console.error("Error deleting appointment:", error);
         } finally {
-          this.loading = false;
+          if (this.setLoading) this.setLoading(false);
         }
       },
+      async createAppointment() {
+        if (!this.newAppointment.timeslot_id || !this.newAppointment.email || !this.newAppointment.description) {
+          alert("Please fill in all fields.");
+          return;
+        }
+      if (this.setLoading) this.setLoading(true);
+      try {
+        await axios.post(
+          `http://localhost/reservation-service/api/patients/${this.patient.id}/appointments`,
+          this.newAppointment,
+          this.getAuthHeaders()
+        );
+        this.showCreateAppointmentModal = false;
+        this.fetchAppointments();
+        this.newAppointment = { timeslot_id: "", email: "", description: "" };
+      } catch (error) {
+        console.error("Error creating appointment:", error);
+      } finally {
+        if (this.setLoading) this.setLoading(false);
+      }
+    },
     },
   };
   </script>

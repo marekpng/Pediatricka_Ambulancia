@@ -13,12 +13,12 @@ class Timeslot extends Model
 
     public function getDateAttribute($value)
     {
-        return Carbon::parse($value)->format('j.n.Y'); 
+        return Carbon::parse($value)->format('j.n.Y');
     }
-    public function setDateAttribute($value)
-    {
-        $this->attributes['date'] = Carbon::createFromFormat('j.n.Y', $value)->format('Y-m-d');
-    }
+//    public function setDateAttribute($value)
+//    {
+//        $this->attributes['date'] = Carbon::createFromFormat('j.n.Y', $value)->format('Y-m-d');
+//    }
     public function appointments()
     {
         return $this->hasMany(Appointment::class);

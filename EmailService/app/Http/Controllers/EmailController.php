@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AppointmentCreatedMail;
 use App\Mail\AppointmentUpdatedMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -57,8 +58,19 @@ class EmailController extends Controller
         return response()->json(['message' => 'Appointment update email sent successfully']);
     }
 
-    public function test(Request $request)
+    public function sendAppointmentCreationEmail(Request $request)
     {
-        return $request;
+        $validated = $request->validate([
+            'email'          => 'required|email',
+            'name'           => 'required|string',
+            'date'           => 'required|date',
+            'time'           => 'required|string',
+            'contact_number' => 'required|string',
+            'description'    => 'nullable|string',
+        ]);
+
+        Mail::to($validated['email'])->send(new AppointmentCreatedMail($validated));
+
+        return response()->json(['message' => 'Appointment creation email sent successfully']);
     }
 }

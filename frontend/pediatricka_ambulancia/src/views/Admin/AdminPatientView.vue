@@ -4,13 +4,18 @@
       <h1 class="title">Manage Patients</h1>
   
       <div class="search-container">
-        <input v-model="searchQuery" class="search-input" placeholder="Search by name..." @input="fetchPatients" />
+        <input
+          v-model="searchQuery"
+          class="search-input"
+          placeholder="Hľadajte podľa mena..."
+          @input="handleSearchInput"
+        />
         <button @click="showCreatePatientModal = true" class="btn btn-primary">Create Patient</button>
       </div>
   
-      <div v-if="loading" class="loading-overlay">
+      <!-- <div v-if="loading" class="loading-overlay">
         <img src="../../assets/medical-loader.gif" alt="Loading..." class="loading-gif" />
-      </div>
+      </div> -->
   
       <div class="patients-list">
         <h2>Existing Patients</h2>
@@ -19,7 +24,7 @@
           <div v-for="patient in patients" :key="patient.id" class="patient-card" @click="viewPatient(patient.id)">
             <h4>{{ patient.name }}</h4>
             <p><strong>DOB:</strong> {{ patient.date_of_birth }}</p>
-            <p><strong>Personal No.:</strong> {{ patient.personal_number }}</p>
+            <!-- <p><strong>Personal No.:</strong> {{ patient.personal_number }}</p> -->
             <p><strong>Contact:</strong> {{ patient.contact_number }}</p>
             <p><strong>Address:</strong> {{ patient.address }}</p>
           </div>
@@ -50,14 +55,14 @@
   
   <script>
   import axios from "axios";
-  
+  import { inject } from "vue";
   export default {
     data() {
       return {
         patients: [],
         searchQuery: "",
         pagination: { current_page: 1, last_page: 1, prev: null, next: null },
-        loading: false,
+        // loading: false,
         showCreatePatientModal: false,
         newPatient: {
           name: "",
@@ -66,7 +71,11 @@
           contact_number: "",
           address: "",
         },
+        setLoading: null,
       };
+    },
+    created() {
+      this.setLoading = inject("setLoading"); 
     },
     mounted() {
       this.fetchPatients();
@@ -79,13 +88,16 @@
           },
         };
       },
-      async fetchPatients(url = "http://localhost/reservation-service/api/patients") {
-        this.loading = true;
+      async fetchPatients(url = null) {
+        if (this.setLoading) this.setLoading(true);
         try {
-          const response = await axios.get(url, {
-            ...this.getAuthHeaders(),
-            params: { search: this.searchQuery },
+          const finalUrl = url || "http://localhost/reservation-service/api/patients"; 
+
+          const response = await axios.get(finalUrl, {
+            headers: { Authorization: `Bearer ${localStorage.getItem("userToken")}` },
+            params: { search: this.searchQuery || "" },
           });
+
           this.patients = response.data.data;
           this.pagination = {
             current_page: response.data.current_page,
@@ -96,9 +108,17 @@
         } catch (error) {
           console.error("Error fetching patients:", error);
         } finally {
-          this.loading = false;
+          if (this.setLoading) this.setLoading(false);
         }
       },
+
+      handleSearchInput() {
+        clearTimeout(this.searchTimeout);
+        this.searchTimeout = setTimeout(() => {
+          this.fetchPatients();
+        }, 1500); 
+      },
+
       viewPatient(id) {
         this.$router.push(`/admin/patients/${id}`);
       },
@@ -107,7 +127,7 @@
           alert("Name, Date of Birth, and Personal Number are required.");
           return;
         }
-        this.loading = true;
+        if (this.setLoading) this.setLoading(true);
         try {
           await axios.post(
             "http://localhost/reservation-service/api/patients",
@@ -120,7 +140,7 @@
         } catch (error) {
           console.error("Error creating patient:", error);
         } finally {
-          this.loading = false;
+          if (this.setLoading) this.setLoading(false);
         }
       },
       resetNewPatientForm() {

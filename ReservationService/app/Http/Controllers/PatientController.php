@@ -129,7 +129,8 @@ class PatientController extends Controller
         if ($timeslot->is_booked) {
             return response()->json(['message' => 'This timeslot is already booked.'], 409);
         }
-
+        $patient = Patient::findOrFail($patientId);
+        
         $appointment = Appointment::create([
             'patient_id'     => $patientId,
             'timeslot_id'    => $validated['timeslot_id'],
@@ -140,6 +141,16 @@ class PatientController extends Controller
         ]);
 
         $timeslot->update(['is_booked' => true]);
+
+
+        Http::post('http://email_service:8000/api/send-appointment-creation-email', [
+            'email'      => $appointment->email,
+            'name'       => $patient->name,
+            'date'       => $timeslot->date,
+            'time'       => "{$timeslot->start_time} - {$timeslot->end_time}",
+            'contact_number' => $patient->contact_number,
+            'description' => $appointment->description ?? '',
+        ]);
 
         return response()->json($appointment, 201);
     }
