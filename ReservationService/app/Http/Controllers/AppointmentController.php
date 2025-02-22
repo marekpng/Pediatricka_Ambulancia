@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Http;
 use App\Models\Patient;
 use App\Models\Timeslot;
 use Illuminate\Support\Str;
-
+use Illuminate\Support\Facades\Hash;
 class AppointmentController extends Controller
 {
 
@@ -58,7 +58,7 @@ class AppointmentController extends Controller
 
         $patients = Patient::where('name', $validated['name'])->get();
         $patient = $patients->first(function ($p) use ($validated) {
-            return \Illuminate\Support\Facades\Hash::check($validated['personal_number'], $p->personal_number);
+            return Hash::check($validated['personal_number'], $p->personal_number);
         });
 
         if (!$patient) {
