@@ -92,15 +92,20 @@ Komplexná webová aplikácia, ktorá slúži ako rezervačný systém a zárove
 #### vytvorenie .env súboru
 * cp .env.example .env
 
-#### Generovanie aplikačného kľúča
-* php artisan key:generate
+
 
 
 #### Spustenie Docker kontajnerov
 * docker-compose up -d
 
 #### Spustenie migrácií
-* php artisan migrate
+* docker-compose exec content_service php artisan migrate (analogicky pre každý service rovnako)
+  
+#### Generovanie aplikačného kľúča
+*  docker-compose exec reservation_service php artisan key:generate
+
+#### Sprístupnenie storage
+* docker-compose exec content_service php artisan storage:link
 
 #### Prístup k aplikácii
 
