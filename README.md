@@ -14,7 +14,7 @@ Komplexná webová aplikácia, ktorá slúži ako rezervačný systém a zárove
 * #### Správa rezervácií – Možnosť pridávať, upravovať a mazať termíny vyšetrení.
 * #### Publikovanie článkov – Použitie WYSIWYG editora na vytváranie a úpravu blogov.
 * #### Harmonogram ordinácie – Možnosť upravovať, pridávať, mazať časové sloty na vyšetrenia pre pacientov.
-
+* #### Autentifikácia adminov - Implementácia je realizovaná pomocou Laravel Sanctum.
 ## Architektúra
 ### Aplikácia je postavená na mikroslužbovej architektúre, kde každá služba má svoju presnú zodpovednosť.
 
