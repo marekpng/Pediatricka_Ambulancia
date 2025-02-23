@@ -1,5 +1,5 @@
 #  Rezervačný systém pediatrickej ambulancie
-Komplexná webová aplikácia, ktorá slúži ako rezervačný systém a zároveň ako prezentačná platforma pre pediatrickú ambulanciu. Systém je postavený na ***microservice*** architektúre a poskytuje plynulý používateľský zážitok pre pacientov aj zdravotnícky personál.
+Komplexná webová aplikácia, ktorá slúži ako rezervačný systém a zároveň ako prezentačná platforma pre pediatrickú ambulanciu. Systém je postavený na ***microservice*** architektúre a poskytuje skvelý používateľský zážitok pre pacientov aj zdravotnícky personál.
 
 # Hlavné funkcie 
 #### (  ⬇ nižšie je uvedený ***snippet*** spolu so ***screenmi*** z aplikácie  ⬇)
