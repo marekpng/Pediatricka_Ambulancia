@@ -1,20 +1,31 @@
 #  Rezervačný systém pediatrickej ambulancie
 Komplexná webová aplikácia, ktorá slúži ako rezervačný systém a zároveň ako prezentačná platforma pre pediatrickú ambulanciu. Systém je postavený na ***microservice*** architektúre a poskytuje skvelý používateľský zážitok pre pacientov aj zdravotnícky personál.
 
-# Hlavné funkcie 
+# Funkčné požiadavky aplikácie 
 #### (  ⬇ nižšie je uvedený ***snippet*** spolu so ***screenmi*** z aplikácie  ⬇)
-## Pre pacientov 
-* #### Rezervácia termínu k lekárovi – Pacient musí vyplniť formulár, kde sa overuje jeho rodné číslo a meno podľa databázy.
-* #### Emailová verifikácia – Po úspešnom overení dostane pacient email s potvrdením.
-* #### Prístup k informáciám – Možnosť prezerania článkov publikovaných lekárom, zoznamu služieb ambulancie, pracovného personálu a ďalších informácií.
+##
+* Aplikácia musí obsahovať prihlasovanie/registráciu administrátorov
+* Administrátor musí vedieť vykonávať CRUD operácie pre vyšetrenia 
+* Administrátor musí vedieť vykonávať CRUD operácie pre už rezervované vyšetrenia
+* Administrátor musí vedieť vykonávať CRUD operácie pre časové okná vyšetrení
+* Administrátor musí vedieť vykonávať CRUD operácie pre pacientov
+* Administrátor musí vedieť vykonávať CRUD operácie pre úpravu profilov pracovného personálu - obrázok, popis, pozícia,...
+* Administrátor musí vedieť za pomoci WYSIWYG editora vytvárať custom stránky - vytváranie blogov, ochrana osobných údajov...
+* Administrátor musí vedieť vykonávať CRUD operácie pre custom stránky
+* Administrátor musí vedieť vykonávať CRUD operácie pre recenzie
+* Administrátor musí vedieť vykonávať CRUD operácie pre poskytujúce služby
+* Administrátor musí vedieť prideľovať termíny vyšetrení jednotlivým pacientom
+* Administrátor musí vedieť vyhľadávať medzi pacientami, zobraziť informácie pacienta a ich vyšetrenia
+* Administrátor musí vedieť vyhľadávať medzi termínmi vyšetrení
+* Administrátor musí vidieť stav rezervácií pre ním zvolený deň.
+* Administrátor musí mať možnosť vytvárať/generovať ním zvolený časový harmonogram pre vyšetrenia, spolu aj s časom potrebným na vyšetrenie
+* Administrátor musí mať možnosť nastavovať dní voľna
+## 
+* Používateľ, ktorý je pacient ambulancie si musí vedieť rezervovať termín vyšetrenia
+* Po rezervácií je potrebné aby prišiel verifikačný email a následne email o úspešnej rezervácií s informáciami o termíne na používateľom zvolenú adresu
+* Validácia časových okien (nedovoliť rezervovať 2 prehliadky v tom istom dátume a čase)
+* Všetky obsahové sekcie ktoré administrátor vie vytvoriť musia byť prístupné pre všetkých používateľov
 
-## Pre lekárov (Admin rozhranie)
-* #### Správa obsahu webu – Možnosť dynamicky upravovať sekcie stránky (napr. blogy, recenzie, služby,...).
-* #### Správa pacientov – Pridávanie, úprava, mazanie a vyhľadávanie pacientov.
-* #### Správa rezervácií – Možnosť pridávať, upravovať a mazať termíny vyšetrení.
-* #### Publikovanie článkov – Použitie WYSIWYG editora na vytváranie a úpravu blogov.
-* #### Harmonogram ordinácie – Možnosť upravovať, pridávať, mazať časové sloty na vyšetrenia pre pacientov.
-* #### Autentifikácia adminov - Implementácia je realizovaná pomocou Laravel Sanctum.
 ## Architektúra
 ### Aplikácia je postavená na mikroslužbovej architektúre, kde každá služba má svoju presnú zodpovednosť.
 
