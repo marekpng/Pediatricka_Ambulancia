@@ -19,7 +19,7 @@ Komplexná webová aplikácia, ktorá slúži ako rezervačný systém a zárove
 * Administrátor musí vedieť vyhľadávať medzi termínmi vyšetrení
 * Administrátor musí vidieť stav rezervácií pre ním zvolený deň.
 * Administrátor musí mať možnosť vytvárať/generovať ním zvolený časový harmonogram pre vyšetrenia, spolu aj s časom potrebným na vyšetrenie
-* Administrátor musí mať možnosť nastavovať dní voľna
+* Administrátor musí mať možnosť nastavovať dni voľna
 ## 
 * Používateľ, ktorý je pacient ambulancie si musí vedieť rezervovať termín vyšetrenia
 * Po rezervácií je potrebné aby prišiel verifikačný email a následne email o úspešnej rezervácií s informáciami o termíne na používateľom zvolenú adresu
